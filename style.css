@@ -1,0 +1,73 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@font-face {
+    font-family: 'Apple Gothic';
+    src: url('./res/fonts/applegothic.woff') format('woff');
+}
+
+body {
+    margin: 0;
+    font-family: 'Apple Gothic', sans-serif;
+    background: url("res/background.png"), white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+image {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 10px;
+    box-sizing: border-box;
+    border-top: 1px solid black;
+}
+
+button {
+    background: transparent;
+    border: 2px solid black;
+    border-radius: none;
+    text-align: right;
+    font-family: inherit;
+    font-size: 1.5em;
+    padding: 10px 15px;
+    padding-top: 15px;
+}
+button:hover {
+    cursor: pointer;
+    background: #03FF00;
+}
+
+.icon {
+    height: 1ch;
+}
+
+.logo {
+    margin-top: 1.7em;
+    margin-left: 2.5em;
+    width: 4em;
+}
+
+header {
+    margin-top: 1.7em;
+    margin-left: 2.5em;
+}
+header img {
+    width: 9em;
+}
