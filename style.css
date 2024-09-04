@@ -4,15 +4,28 @@
     src: url('./res/fonts/applegothic.woff') format('woff');
 }
 
+:root {
+    --sans-serif: 'Pretendard', system-ui, sans-serif;
+    --old-computer: 'Apple Gothic', sans-serif;
+}
+
 body {
     margin: 0;
-    font-family: 'Apple Gothic', sans-serif;
+    font-family: var(--old-computer);
     background: url("res/background.png"), white;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
+}
+
+.container {
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-snap-align: center;
 }
 
 image {
@@ -28,7 +41,7 @@ image {
 }
 
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     display: flex;
@@ -46,8 +59,8 @@ button {
     text-align: right;
     font-family: inherit;
     font-size: 1.5em;
-    padding: 10px 15px;
-    padding-top: 15px;
+    padding: .4em .6em;
+    padding-top: .6em;
 }
 button:hover {
     cursor: pointer;
@@ -65,9 +78,78 @@ button:hover {
 }
 
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
     margin-top: 1.7em;
     margin-left: 2.5em;
 }
 header img {
     width: 9em;
+}
+
+/* subpages */
+
+.cmss {
+    pointer-events: none;
+    font-size: 10em;
+    font-weight: 800;
+    color: #E8E8E8;
+    opacity: .25;
+    position: fixed;
+    top: .5rem;
+    right: 7.5rem;
+    font-family: var(--sans-serif);
+}
+
+.right-column {
+    position: absolute;
+    top: 0;
+    border-right: 2px solid black;
+    right: 3em;
+    padding: 8em 5.5em;
+    height: 100%;
+    text-align: right;
+    font-family: var(--sans-serif);
+    box-sizing: border-box;
+}
+
+.right-column hr {
+    width: 30vw;
+    margin: 0;
+    margin-left: auto;
+}
+
+.right-column h1 {
+    font-size: 1.75em;
+    font-family: var(--sans-serif);
+    font-weight: bold;
+}
+
+.right-column p {
+    font-size: 1.5rem;
+    line-height: 1.75em;
+}
+
+.company-signature {
+    font-size: 1.1em;
+    position: relative;
+    font-family: var(--sans-serif);
+    width: 21.5rem;
+}
+.company-signature b {
+    font-size: 1.136em;
+}
+.company-signature img {
+    position: absolute;
+    top: .3rem;
+    right: 0;
+    width: 12rem;
+}
+
+.page {
+    position: relative;
+    height: 100svh;
+    width: 100vw;
+    scroll-snap-align: start;
 }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMSS | 대표 인사말</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .oval {
+            position: absolute;
+            left: 12rem;
+            bottom: 6rem;
+            pointer-events: none;
+
+            --rotate: 0;
+        }
+
+        .oval > img {
+            width: 20rem;
+            border: 3px solid white;
+            border-radius: 50%;
+        }
+        .oval .ceo {
+            transform: rotateY(calc(1deg * var(--rotate)));
+        }
+        .oval .coupon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotateY(calc(180deg - 1deg * var(--rotate)));
+            z-index: calc(var(--rotate) - 90);
+        }
+
+        .arrow {
+            left: 32.5rem;
+            top: 20.5rem;
+            position: absolute;
+            width: 32vw;
+        }
+
+        .oval .company-signature {
+            margin-top: .5rem;
+            margin-left: 2.25rem;
+        }
+
+        .download {
+            width: 4.5em;
+            text-align: center;
+            font-size: 1.25rem;
+            font-family: var(--sans-serif);
+            box-shadow: 0 4px 4px rgba(0,0,0,.25);
+
+            position: absolute;
+            bottom: 8.5rem;
+            left: 32.5rem;
+        }
+
+        body.fadeout .fadeout {
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        body.fadeout .right-column {
+            right: 40vw;
+            animation: slide-out 2s ease-in-out;
+        }
+        @keyframes slide-out {
+            0% {
+                right: 3em;
+            }
+            100% {
+                right: 40vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="right-column" style="position: fixed"></div>
+
+        <div class="page fadeout">
+    
+            <div class="right-column">
+                <h1>대표 인사말</h1>
+                <hr>
+                <p>
+                    축하합니다, 관리자님<br>
+                    첫 임무를 성공적으로 수행하셨네요.
+                </p>
+            </div>
+    
+        </div>
+    
+        <div class="page fadeout">
+            
+            <div class="right-column">
+                <h1>대표 인사말</h1>
+                <hr>
+                <p>
+                    회사의 유능한 인재인 당신께<br>
+                    우리 회사가 주는 약소한 선물입니다.
+                </p>
+            </div>
+
+            <img src="res/intro-arrow.svg" class="arrow">
+
+            <button onclick="moveToProducts()" class="download">받기</button>
+
+        </div>
+
+        <header>
+            <a href="index.html"><img src="res/logofull.svg"></a>
+        </header>
+
+        <span class="cmss fadeout">
+            CMSS
+        </span>
+
+        <div class="oval fadeout">
+            <img src="res/ceo-portrait.png" class="ceo">
+            <img src="res/employee-coupon.png" class="coupon">
+            <div class="company-signature">
+                (주)첨단 메모리 시스템 대표 <b>이첨단</b>
+                <img src="res/signature.png">
+            </div>
+        </div>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+    </div>
+    
+</body>
+
+<script>
+    const pages = document.getElementsByClassName("page");
+    const container = document.querySelector(".container");
+
+    var scrollTransitions = [
+        {
+            element: document.querySelector(".oval"),
+            property: "--rotate",
+            values: [0, 180]
+        }
+    ];
+
+    container.addEventListener("scroll", function() {
+        var page = this.scrollTop / window.innerHeight;
+
+        for (let transition of scrollTransitions) {
+            const element = transition.element;
+            const values = transition.values;
+
+            element.style.setProperty(
+                transition.property, 
+                lerp(values[ Math.floor(page) ], values[ Math.min(Math.ceil(page), values.length-1) ], page - Math.floor(page))
+            );
+        }
+    });
+
+    function lerp(a, b, t) {
+        return a + t * (b-a);
+    }
+
+    function moveToProducts() {
+        document.body.classList.add("fadeout");
+        document.querySelector(".right-column").addEventListener("animationend", () => {
+            location.href = "/products.html";
+        });
+    }
+</script>
+
+</html>
