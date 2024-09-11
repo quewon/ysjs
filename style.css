@@ -22,6 +22,11 @@ body {
 
 .container {
     height: 100vh;
+    overflow: hidden;
+}
+
+.container:has(.page) {
+    height: 100vh;
     overflow-x: hidden;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
@@ -86,6 +91,12 @@ header {
 }
 header img {
     width: 9em;
+}
+header .logomin {
+    width: unset;
+    margin-left: -1rem;
+    margin-top: .75rem;
+    width: 5rem;
 }
 
 /* subpages */
