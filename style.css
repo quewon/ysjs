@@ -59,7 +59,7 @@ footer {
 
 button {
     background: transparent;
-    border: 2px solid black;
+    border: 1.5px solid black;
     border-radius: none;
     text-align: right;
     font-family: inherit;
@@ -77,8 +77,11 @@ button:hover {
 }
 
 .logo {
-    margin-top: 1.7em;
-    margin-left: 2.5em;
+    position: absolute;
+    top: 1.7em;
+    left: 2.5em;
+}
+.logo img {
     width: 4em;
 }
 
@@ -116,7 +119,7 @@ header .logomin {
 .right-column {
     position: absolute;
     top: 0;
-    border-right: 2px solid black;
+    border-right: 1.5px solid black;
     right: 3em;
     padding: 8em 5.5em;
     height: 100%;

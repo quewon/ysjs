@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMSS | 가입</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .form {
+            display: flex;
+            gap: 1rem;
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            translate: -50% -50%;
+
+            --input-height: 5rem;
+        }
+
+        input {
+            border: 1.25px solid black;
+            font-size: 1.75rem;
+            padding: 1rem 2rem;
+            width: 40rem;
+            box-sizing: border-box;
+            height: var(--input-height);
+        }
+        input::placeholder {
+            color: #C2C2C2;
+        }
+
+        .input-button {
+            cursor: pointer;
+        }
+        .input-button img {
+            height: var(--input-height);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
+        </header>
+
+        <span class="cmss">
+            CMSS
+        </span>
+
+        <div class="right-column">
+            <h1>대표 인사말</h1>
+            <hr>
+            <p>디지털 영생이 될 당신의 마지막 이름을 남겨주세요.</p>
+        </div>
+
+        <div class="form">
+            <input type="text" placeholder="이름을 입력하세요.">
+            <a class="input-button" onclick="submit()"><img src="res/brain.png" alt="입력"></a>
+        </div>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+
+    </div>
+    
+</body>
+
+<script>
+
+    var input = document.querySelector("input");
+
+    input.addEventListener("keypress", (e) => {
+        if (e.key == "Enter") {
+            submit();
+        }
+    })
+
+    function submit() {
+        var value = input.value.trim();
+        if (value != "") {
+            console.log(value);
+            location.href = "/ysjs/memory.html";
+        }
+    }
+
+</script>
+
+</html>
