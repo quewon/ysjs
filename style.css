@@ -7,6 +7,7 @@
 :root {
     --sans-serif: 'Pretendard', system-ui, sans-serif;
     --old-computer: 'Apple Gothic', sans-serif;
+    --brand-green: #03FF00;
 }
 
 body {
@@ -69,7 +70,7 @@ button {
 }
 button:hover {
     cursor: pointer;
-    background: #03FF00;
+    background: var(--brand-green);
 }
 
 .icon {

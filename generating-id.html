@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | 아이디 생성중...</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        main svg {
+            height: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        main svg rect {
+            transition: fill 1.5s;
+        }
+
+        main h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-family: var(--sans-serif);
+            font-weight: 600;
+        }
+
+        main img {
+            object-fit: contain;
+            height: 18rem;
+        }
+
+        main p {
+            margin-top: 2.5rem;
+            font-size: 1.25rem;
+            font-family: var(--sans-serif);
+            line-height: 1.75em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="right-column"></div>
+
+        <main>
+            <svg width="251" height="122" viewBox="0 0 251 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="31.6509" y="18.1177" width="29.3793" height="97.0247" transform="rotate(16.3875 31.6509 18.1177)" fill="white" stroke="black" stroke-width="2"/>
+                <rect x="62.0731" y="22.913" width="34.929" height="97.1777" fill="white" stroke="black" stroke-width="2"/>
+                <rect x="101.159" y="14.5008" width="35.7702" height="105.59" fill="white" stroke="black" stroke-width="2"/>
+                <rect x="141.104" y="1.04186" width="53.4354" height="119.049" fill="white" stroke="black" stroke-width="2"/>
+                <line x1="1.26624e-07" y1="119.441" x2="250.827" y2="119.441" stroke="black" stroke-width="2.98604"/>
+            </svg>                
+            <h1>아이디 생성 중..</h1>
+            <img src="res/ads/1.png">
+            <p>현재 고객님의 디지털 영생이 진행 중입니다.<br>잠시만 기다려주시면 디지털 ID카드가 완성됩니다.</p>
+        </main>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+
+    </div>
+    
+</body>
+
+<script>
+
+    var image = document.querySelector("img");
+    var images = [
+        "res/ads/1.png",
+        "res/ads/2.png",
+        "res/ads/3.png"
+    ];
+    var imageIndex = 1;
+
+    setInterval(() => {
+        if (imageIndex >= images.length) {
+            location.href = "/ysjs/id.html";
+        }
+
+        image.src = images[imageIndex];
+
+        imageIndex++;
+    }, 5000);
+
+    var logo = document.querySelector("svg");
+    var rects = logo.querySelectorAll("rect");
+    var rectIndex = 0;
+    var colors = ["#080584", "white"];
+    var colorIndex = 0;
+
+    setInterval(() => {
+        rects[rectIndex].style.fill = colors[colorIndex];
+        
+        rectIndex++;
+        if (rectIndex >= rects.length) {
+            rectIndex = 0;
+            colorIndex++;
+            if (colorIndex > 1) colorIndex = 0;
+        }
+    }, 1000);
+
+</script>
+
+</html>

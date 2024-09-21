@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="res/logo.png">
-    <title>CMSS | 가입</title>
+    <title>CMSS | 업로드중...</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .form {
@@ -51,14 +51,9 @@
         </span>
 
         <div class="right-column">
-            <h1>대표 인사말</h1>
+            <h1>기억 업로드중...</h1>
             <hr>
-            <p>디지털 영생이 될 당신의 마지막 이름을 남겨주세요.</p>
-        </div>
-
-        <div class="form">
-            <input type="text" placeholder="이름을 입력하세요.">
-            <a class="input-button" onclick="submit()"><img src="res/brain.png" alt="입력"></a>
+            <p>업로드가 완료되기 전에 페이지를 닫지 마세요.</p>
         </div>
 
         <footer>
@@ -78,24 +73,10 @@
 </body>
 
 <script>
-
-    sessionStorage.clear();
-
-    var input = document.querySelector("input");
-
-    input.addEventListener("keypress", (e) => {
-        if (e.key == "Enter") {
-            submit();
-        }
-    })
-
-    function submit() {
-        var value = input.value.trim();
-        if (value != "") {
-            sessionStorage.setItem("name", value);
-            location.href = "/ysjs/uploading-memory.html";
-        }
-    }
+    
+    setTimeout(() => {
+        location.href = "/ysjs/memory.html";
+    }, Math.random() * 4000 + 1000);
 
 </script>
 

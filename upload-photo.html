@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | 프로필 사진</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+        main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        h1, h2 {
+            margin: 0;
+            font-weight: normal;
+            font-family: var(--sans-serif);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #8D8D8D;
+        }
+
+        .name {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .card {
+            font-size: 1.25rem;
+            border: 1.25px solid black;
+            padding: 1em;
+            line-height: 1.65em;
+        }
+
+        img {
+            height: 6rem;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
+        </header>
+
+        <main>
+            <h1><b class="name">이름</b> 님</h1>
+            <div class="card">
+                영구적으로 소장될 당신의 ID 카드에 들어갈<br>
+                프로필 사진을 업로드하세요.
+            </div>
+            <a href="contract.html"><img src="res/camera.svg"></a>
+            <h2>평생 남을 사진이니 신중을 가하세요.</h2>
+        </main>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+
+    </div>
+    
+</body>
+
+<script>
+    
+    document.querySelectorAll(".name").forEach((el) => {
+        el.textContent = sessionStorage.getItem("name");
+    })
+
+</script>
+
+</html>

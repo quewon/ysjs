@@ -123,17 +123,14 @@
                     <div>
                         <h1>제 1조 (개인정보의 수집 및 이용)</h1>
                         <p>회원은 본 약관에 동의함으로써 본인의 이름, 프로필 사진, 기억 등의 개인정보가 디지털 영생 서비스를 제공하기 위해 수집되고 이용되는 것에 대해 명시적으로 동의합니다. 수집된 개인정보는 회원의 디지털 뇌가 가상 환경에서 영생할 수 있게 하기 위해서만 사용되며, 어떠한 경우에도 외부에 유출되지 않습니다. 회사는 회원의 개인정보를 보호하기 위해 관련 법령에 따라 관리할 것입니다. 개인정보는 디지털 영생이 끝날 때까지 (주) 첨단 메모리 시스템에 귀속됩니다.</p>
-                        <a class="toggleable" onclick="toggle(this)">&gt; 개인정보 수집에 동의합니다.</a>
                     </div>
                     <div>
                         <h1>제 2조 (디지털 영생 권한 이임)</h1>
                         <p>디지털 영생 기본권은 회원 가입일로부터 10년간 회원 본인에게 부여됩니다. 이 기간 동안 디지털 영생 기본권은 타인에게 양도될 수 없습니다. 기본권의 유효기간이 만료되기 전, 회원이 디지털 영생 용량 업그레이드를 하지 않을 경우 기본권의 권한은 자동으로 소멸됩니다. 회원이 디지털 영생 용량 업그레이드 이용권을 구매할 경우, 구매한 이용권의 조건에 따라 양도가 일부 가능할 수 있습니다. 자세한 양도 조건은 이용권 구매 시 제공되는 별도의 약관에 따릅니다.</p>
-                        <a class="toggleable" onclick="toggle(this)">&gt; 디지털 영생 권한 이임에 동의합니다.</a>
                     </div>
                     <div>
                         <h1>제 3조 (디지털 영생 용량 업그레이드)</h1>
                         <p>디지털 영생 용량 업그레이드를 통해 더 많은 기억과 데이터를 저장하기 위해서는 추가 비용이 발생합니다.디지털 영생 용량 업그레이드 비용 및 방법에 대한 구체적인 사항은 (주)첨단 메모리 시스템 고객센터를 통해 확인할 수 있습니다. 고객센터는 회원의 문의에 성실히 답변하며, 필요한 경우 상세 안내를 제공할 것입니다. 회사는 업그레이드 비용에 대한 변동 사항을 사전 공지하며, 회원에게 불리한 변경이 있을 경우 최소 30일 전에 이를 공지합니다.</p>
-                        <a class="toggleable" onclick="toggle(this)">&gt; 디지털 영생 용량 약정에 동의합니다.</a>
                     </div>
                 </div>
             </div>
@@ -158,26 +155,5 @@
     </div>
     
 </body>
-
-<script>
-
-    function toggle(a) {
-        a.classList.toggle("selected");
-        
-        var button = document.querySelector(".contract-button");
-        if (document.querySelectorAll("a.selected").length == 3) {
-            button.textContent = "다음";
-            button.onclick = null;
-            button.parentElement.href = "signature.html";
-            button.classList.add("changed");
-        } else {
-            button.classList.remove("changed");
-            button.textContent = "이전";
-            button.onclick = history.back;
-            button.parentElement.href = "";
-        }
-    }
-
-</script>
 
 </html>

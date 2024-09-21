@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | 서명</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+            text-align: right;
+        }
+
+        .contract {
+            display: flex;
+            flex-direction: column;
+            border: 1.5px solid black;
+            text-align: left;
+            min-width: calc(100vw - 15rem);
+            background: #F6F6F6;
+        }
+        .contract h1 {
+            font-family: var(--sans-serif);
+            font-weight: normal;
+            font-size: 1.3rem;
+        }
+        .contract > div {
+            position: relative;
+        }
+        .contract img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+        }
+        .contract * {
+            margin: 0;
+        }
+
+        .contract a {
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: black;
+            text-decoration: underline;
+            white-space: nowrap;
+        }
+        .contract a.selected {
+            color: #1D16F7;
+        }
+        .contract a {
+            padding: .4rem;
+            font-size: 1.1rem;
+            display: block;
+            text-align: right;
+            border-top: 1px solid black;
+        }
+
+        button {
+            margin-top: 1rem;
+            background: white;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, .25);
+            width: 6rem;
+            text-align: center;
+        }
+        button.changed {
+            animation: flash .5s ease-in-out;
+        }
+        @keyframes flash {
+            0% { 
+                background: var(--brand-green);
+                box-shadow: 0 0 30px var(--brand-green);
+            }
+            100% {
+                background: white;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, .25);
+            }
+        }
+
+        .signature-field {
+            min-height: 20rem;
+            position: relative;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        a.disabled {
+            color: rgba(0, 0, 0, .25);
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="right-column"></div>
+
+        <main>
+            <div class="contract">
+                <div style="border-bottom: 1px solid black; display: flex; justify-content: space-between; padding: .4rem 1.5rem;">
+                    <h1 style="font-size: 1.5rem">서명</h1>
+                    <img src="res/brain.png" alt="">
+                </div>
+                <div class="signature-field">
+                    <canvas></canvas>
+                </div>
+                <div>
+                    <a class="toggleable disabled">&gt; 서명 기입에 동의합니다.</a>
+                </div>
+            </div>
+            <a href=""><button class="contract-button" onclick="history.back()">이전</button></a>
+        </main>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+
+        <header>
+            <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
+        </header>
+    </div>
+    
+</body>
+
+<script>
+
+    function toggle(a) {
+        a.classList.toggle("selected");
+
+        var button = document.querySelector(".contract-button");
+        if (document.querySelectorAll("a.selected").length == 1) {
+            button.textContent = "다음";
+            button.onclick = null;
+            button.onmousedown = save_image();
+            button.parentElement.href = "generating-id.html";
+            button.classList.add("changed");
+        } else {
+            button.classList.remove("changed");
+            button.textContent = "이전";
+            button.onclick = history.back;
+            button.parentElement.href = "";
+        }
+    }
+
+    var canvas = document.querySelector("canvas");
+    var context = canvas.getContext("2d");
+    var mousedown = false;
+
+    var canvas_rect;
+
+    window.onload = function() {
+        window.onresize();
+
+        context.strokeStyle = "black";
+        context.lineWidth = "4";
+    }
+
+    window.onresize = function() {
+        canvas_rect = canvas.getBoundingClientRect();
+        canvas.width = canvas_rect.width * window.devicePixelRatio;
+        canvas.height = canvas_rect.height * window.devicePixelRatio;
+        context.resetTransform();
+        context.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    document.addEventListener("mousedown", (e) => {
+        context.beginPath();
+        context.moveTo(
+            e.pageX - canvas_rect.left,
+            e.pageY - canvas_rect.top
+        );
+        mousedown = true;
+    })
+
+    document.addEventListener("mouseup", () => {
+        context.beginPath();
+        mousedown = false;
+    });
+    window.addEventListener("blur", () => {
+        context.beginPath();
+        mousedown = false;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+        if (mousedown == true) {
+            context.lineTo(
+                e.pageX - canvas_rect.left,
+                e.pageY - canvas_rect.top
+            )
+            context.stroke();
+            context.closePath();
+            context.moveTo(
+                e.pageX - canvas_rect.left,
+                e.pageY - canvas_rect.top
+            )
+            enable_anchor();
+        }
+    })
+
+    const anchor = document.querySelector(".toggleable");
+    function enable_anchor() {
+        if (anchor.classList.contains("disabled")) {
+            anchor.classList.remove("disabled");
+            anchor.onclick = function() { toggle(anchor) };
+        }
+    }
+
+    function save_image() {
+        sessionStorage.setItem("signature", canvas.toDataURL())
+    }
+
+</script>
+
+</html>

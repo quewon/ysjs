@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMSS | 상품 제공</title>
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | 상품</title>
     <link rel="stylesheet" href="style.css">
     <style>
         :root {
@@ -43,12 +44,17 @@
             font-family: var(--old-computer);
         }
 
-        .left-column canvas {
-            width: 100%;
-            height: 100%;
+        .left-column .gradient {
             position: absolute;
-            top: 0;
-            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--floor);
+            background: linear-gradient(to top,
+                rgba(247, 247, 247, .5) 15%,
+                rgba(215, 215, 215, .5) 61%,
+                rgba(140, 140, 140, .5) 120%
+            );
+            border-top: 1px solid black;
         }
 
         .right-column {
@@ -58,7 +64,7 @@
             right: 0;
             width: 40vw;
             border: none;
-            border-left: 2px solid black;
+            border-left: 1.5px solid black;
             
             display: flex;
             flex-direction: column;
@@ -81,6 +87,23 @@
             top: 50%;
             translate: 0 -50%;
         }
+
+        .boxes {
+            position: absolute;
+            bottom: var(--floor);
+            left: 50%;
+            translate: -50% 0;
+        }
+
+        .boxes div {
+            width: fit-content;
+            padding: 1em;
+            font-size: 1.25rem;
+            box-shadow: inset 10px 4px 4px rgba(0, 0, 0, .25);
+            border: 1px solid black;
+            /* transform-origin: 0% 100%;
+            transform: rotate(-90deg); */
+        }
     </style>
 </head>
 <body>
@@ -89,13 +112,21 @@
 
         <main>
             <div class="left-column">
-                <canvas></canvas>
                 <h1>*무료제공*</h1>
                 <h2>*2,000,000원 상당의 상품</h2>
+
+                <div class="gradient"></div>
+
+                <div class="boxes">
+                    <div style="background: #597EEE; color: white; padding: 1.75em;">후견인 열람권 (5년)</div>
+                    <div style="left: 1em; background: #A1B8FF">괸리자 편집권(1회)</div>
+                    <div style="background: #C7C9D1">디지털 영생 기억 보관권(10년)</div>
+                    <div style="background: #DAD7FE">프로필 촬영권(1회)</div>
+                </div>
             </div>
     
             <div class="right-column">
-                <a href="contract.html"><button><img class="icon" src="res/folder icon.svg"> 혜택 약정 자세히 보기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a><br>
+                <a href="contract-viewonly.html"><button><img class="icon" src="res/folder icon.svg"> 혜택 약정 자세히 보기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a><br>
                 <a href="name.html"><button><img class="icon" src="res/folder icon.svg"> 디지털 영생 가입하기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
             </div>
         </main>
@@ -116,76 +147,5 @@
     </div>
     
 </body>
-
-<script>
-    var canvas = document.querySelector("canvas");
-    var context = canvas.getContext("2d");
-    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    const floor = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--floor')) * rem * window.devicePixelRatio;
-
-    window.onload = function() {
-        window.onresize();
-        draw();
-
-        // init
-
-        new TextBox("후견인 열람권 (5년)", "#597EEE", "white");
-        new TextBox("관리자 편집권 (1회)", "#A1B8FF");
-        new TextBox("디지털 영생 기억 보관권(10년)", "#C7C9D1");
-        new TextBox("프로필 촬영권(1회)", "#DAD7FE");
-    }
-
-    window.onresize = function() {
-        canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-        canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-    }
-
-    function draw() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        context.fillStyle = "lightgray";
-        context.fillRect(0, canvas.height - floor, canvas.width, canvas.height);
-
-        for (let box of boxes) {
-            box.update();
-            box.draw();
-        }
-
-        requestAnimationFrame(draw);
-    }
-
-    var boxes = [];
-
-    class TextBox {
-        text;
-        box_color;
-        text_color;
-
-        x;
-        y;
-        vx;
-        vy;
-
-        constructor(text, box_color, text_color) {
-            this.text = text;
-            this.text_color = text_color || "black";
-            this.box_color = box_color;
-            boxes.push(this);
-
-            this.x = 0;
-            this.y = 0;
-        }
-
-        update() {
-
-        }
-
-        draw() {
-            context.fillStyle = this.text_color;
-            context.font = 1.25 * rem + "px 'Apple Gothic'";
-            context.fillText(0, 0, this.text);
-        }
-    }
-</script>
 
 </html>

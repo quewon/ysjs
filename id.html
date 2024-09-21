@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | ID</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --floor: 20rem;
+        }
+
+        main {
+            display: flex;
+            height: 100%;
+        }
+
+        .left-column {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .right-column {
+            position: relative;
+            flex-shrink: 0;
+
+            right: 0;
+            width: 55vw;
+            border: none;
+            border-left: 1.5px solid black;
+            
+            display: flex;
+            flex-direction: column;
+            gap: .5em;
+            justify-content: end;
+            padding-bottom: var(--floor);
+        }
+
+        .qr-code, .signature {
+            position: absolute;
+        }
+
+        .signature {
+            bottom: 5rem;
+            left: 45vw;
+        }
+        .signature img {
+            max-height: 10rem;
+            max-width: 20rem;
+        }
+
+        .left-column .gradient {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: var(--floor);
+            background: linear-gradient(to top,
+                rgba(247, 247, 247, .5) 15%,
+                rgba(215, 215, 215, .5) 61%,
+                rgba(140, 140, 140, .5) 120%
+            );
+            border-top: 1px solid black;
+        }
+
+        .boxes {
+            font-family: var(--sans-serif);
+            font-weight: bold;
+            position: absolute;
+            bottom: var(--floor);
+            left: 50%;
+            translate: -50% 0;
+            white-space: nowrap;
+        }
+
+        .boxes div {
+            width: fit-content;
+            padding: .7rem;
+            font-size: 1.25rem;
+            border: 1px solid black;
+            /* transform-origin: 0% 100%;
+            transform: rotate(-90deg); */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <main>
+            <div class="left-column">
+                <div class="gradient"></div>
+                <div class="boxes">
+                    <div style="background: #080584; color: white; font-size: 2.25rem">축하합니다!</div>
+                    <div style="left: 1em; background: #A1B8FF; font-size: 1.75rem"><span class="name"></span>님의</div>
+                    <div style="background: #DAD7FE; font-size: 1.75rem">디지털 영생 업로드가 완료되었습니다.</div>
+                </div>
+            </div>
+    
+            <div class="right-column">
+                <img src="res/id.webp">
+            </div>
+
+            <div class="qr-code">
+                
+            </div>
+
+            <div class="signature">
+
+            </div>
+        </main>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+    </div>
+    
+</body>
+
+<script>
+    document.querySelectorAll(".name").forEach((el) => {
+        el.textContent = sessionStorage.getItem("name");
+    })
+</script>
+
+</html>
