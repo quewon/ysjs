@@ -4,9 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="res/logo.png">
-    <title>CMSS | 프로필 사진</title>
+    <title>CMSS | 사진</title>
     <link rel="stylesheet" href="style.css">
     <style>
+
+        #overlay.drag {
+            top: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+            width: 100vw;
+            height: 100svh;
+            border: 10px solid var(--brand-green);
+            box-sizing: border-box;
+        }
 
         main {
             position: absolute;
@@ -17,6 +28,9 @@
 
             display: flex;
             flex-direction: column;
+            gap: 4rem;
+        }
+        .uploaded main {
             gap: 3rem;
         }
 
@@ -45,10 +59,40 @@
             border: 1.25px solid black;
             padding: 1em;
             line-height: 1.65em;
+            width: fit-content;
+            margin: auto;
+        }
+        .uploaded .card {
+            display: none;
         }
 
-        img {
+        main img {
+            margin: auto;
+            max-width: 35vw;
+        }
+        body:not(.uploaded) main img {
             height: 6rem;
+        }
+
+        button {
+            background: white;
+        }
+        .done-button {
+            display: none;
+            position: absolute;
+            bottom: 6rem;
+            right: 3.5rem;
+        }
+        .done-button button {
+            width: 15em;
+            font-size: 1.25rem;
+        }
+        .uploaded .done-button {
+            display: block;
+        }
+
+        .right-column {
+            right: 1.5em;
         }
         
     </style>
@@ -61,15 +105,19 @@
             <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
         </header>
 
+        <div class="right-column"></div>
+
         <main>
             <h1><b class="name">이름</b> 님</h1>
             <div class="card">
                 영구적으로 소장될 당신의 ID 카드에 들어갈<br>
                 프로필 사진을 업로드하세요.
             </div>
-            <a href="contract.html"><img src="res/camera.svg"></a>
-            <h2>평생 남을 사진이니 신중을 가하세요.</h2>
+            <img class="image" src="res/camera.svg">
+            <h2>촬영한 프로필 사진 파일을 드래그해서 업로드 하세요.</h2>
         </main>
+
+        <a class="done-button" href="contract.html"><button>업로드 완료 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
 
         <footer>
             <span></span>
@@ -84,6 +132,8 @@
         </footer>
 
     </div>
+
+    <div id="overlay"></div>
     
 </body>
 
@@ -93,6 +143,44 @@
         el.textContent = sessionStorage.getItem("name");
     })
 
+    var overlay = document.getElementById("overlay");
+
+    document.body.addEventListener("dragenter", (e) => {
+        overlay.classList.add("drag");
+        e.preventDefault();
+    })
+    document.body.addEventListener("dragleave", (e) => {
+        let file = e.dataTransfer.files[0];
+        overlay.classList.remove("drag");
+        e.preventDefault();
+    })
+    document.body.addEventListener("dragover", (e) => {
+        overlay.classList.add("drag");
+        e.preventDefault();
+    })
+    document.body.addEventListener("drop", (e) => {
+        let file = e.dataTransfer.files[0];
+        e.preventDefault();
+        // e.stopPropagation();
+
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            sessionStorage.setItem("picture", reader.result);
+
+            var image = document.querySelector(".image");
+            image.src = reader.result;
+            document.body.classList.add("uploaded");
+            document.querySelector("h1").innerHTML = `<h1><b class="name">이름</b> 님의 프로필 사진</h1>`;
+
+            document.querySelectorAll(".name").forEach((el) => {
+                el.textContent = sessionStorage.getItem("name");
+            })
+
+            overlay.classList.remove("drag");
+        }
+    })
+    
 </script>
 
 </html>

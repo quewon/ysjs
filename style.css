@@ -168,3 +168,13 @@ header .logomin {
     width: 100vw;
     scroll-snap-align: start;
 }
+
+a.toggleable::before {
+    content: url("res/unchecked_box.svg");
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: .3em;
+}
+a.toggleable.selected::before {
+    content: url("res/checked_box.svg");
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="res/logo.png">
-    <title>CMSS | 기억 편집</title>
+    <title>CMSS | 편집</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body.hover {
@@ -18,8 +18,12 @@
         }
 
         dialog {
+            padding: 2rem;
             border: 1.5px solid black;
             text-align: center;
+        }
+        dialog#info {
+            padding: 2rem 4rem;
         }
         button {
             background: white;
@@ -31,6 +35,11 @@
             bottom: 5rem;
             left: 50%;
             translate: -50% 0;
+        }
+
+        input {
+            font-size: inherit;
+            font-family: inherit;
         }
     </style>
 </head>
@@ -77,12 +86,10 @@
     </dialog>
 
     <dialog id="info">
-        <b>편집 방법</b><br>
-        화면에 클릭하여 입자를 생성할 수 있고,<br>
-        우클릭으로 입자를 삭제할 수 있습니다.<br>
-        키워드를 선택하여 생성할 입자의 형태를 바꿀 수 있습니다.<br>
-        키워드는 새롭게 생성할 수 있습니다.<br>
+        편집 방법<br>
         <br>
+        <img style="width: 26rem" src="res/tutorial.svg" alt="좌클릭으로 입자생성, 우클릭으로 입자를 삭제하실 수 있습니다. 키워드를 선택하여 생성할 입자의 형태를 바꿀 수 있습니다. 키워드는 새롭게 생성할 수 있습니다.">
+        <br><br>
         <button onclick="this.parentElement.close()">OK</button>
     </dialog>
 
@@ -90,7 +97,15 @@
         <b>편집을 마치겠습니까?</b><br>
         이후 더 이상의 편집은 불가능합니다.<br>
         <br>
-        <a href="upload-photo.html"><button>제출하기</button></a>
+        <a onclick="this.parentElement.close()"><button>취소</button></a>
+        <a onclick="saveBrain()"><button>확인</button></a>
+    </dialog>
+
+    <dialog id="add-word">
+        <b>+</b> <input class="word-input" type="text" placeholder="새 키워드"><br>
+        <br>
+        <a onclick="this.parentElement.close()"><button>취소</button></a>
+        <a onclick="add_word(this.parentElement)"><button>키워드 추가</button></a>
     </dialog>
     
 </body>
@@ -107,8 +122,9 @@
     var circle_radius = 0;
     var brush_radius = 0;
     var words = {};
+    var particles = [];
 
-    var colors = ["red", "blue", "yellow", "orange", "purple", "green", "yellowgreen", "orangered", "cyan"];
+    var colors = ["red", "blue", "yellow", "orange", "purple", "green", "yellowgreen", "orangered", "cyan", "#080584"];
 
     class Word {
         word;
@@ -117,18 +133,26 @@
         hovered = false;
         selected = false;
 
-        particles = [];
+        particleCount = 0;
         particle_radius = 50;
 
         constructor(word) {
-            words[word] = this;
+            if (word) words[word] = this;
 
             this.word = word;
             this.color = colors.shift();
+            colors.push(this.color);
 
             this.particle_radius = Math.random() * 40 + 10;
 
             this.word_particle = new WordParticle(word);
+            
+            for (let i=0; i<10; i++) {
+                this.createParticle(
+                    Math.random() * window.innerWidth + window.innerWidth/2,
+                    Math.random() * window.innerHeight + window.innerHeight/2
+                );
+            }
         }
         
         select() {
@@ -147,7 +171,8 @@
         }
 
         createParticle(x, y) {
-            new Particle(this.word, x, y)
+            new Particle(this.word, x, y);
+            this.particleCount++;
         }
     }
 
@@ -167,11 +192,13 @@
         active = true;
 
         constructor(word, x, y) {
-            words[word].particles.push(this);
-
-            this.word = word;
-            this.color = words[word].color;
-            this.outer_r = words[word].particle_radius;
+            particles.push(this);
+            
+            if (word) {
+                this.word = word;
+                this.color = words[word].color;
+                this.outer_r = words[word].particle_radius;
+            }
 
             this.x = x;
             this.y = y;
@@ -201,9 +228,7 @@
             var cx1 = canvas.width/2 - canvas.width/8;
             var cx2 = canvas.width/2 + canvas.width/8;
 
-            // var cx = canvas.width/2;
             var cy = canvas.height/2;
-            // var dx = cx - this.x;
             var dx1 = cx1 - this.x;
             var dx2 = cx2 - this.x;
             var dy = cy - this.y;
@@ -225,28 +250,26 @@
 
             // repelled from other particles
 
-            for (let word in words) {
-                for (let particle of words[word].particles) {
-                    if (particle == this) continue;
+            for (let particle of particles) {
+                if (particle == this) continue;
 
-                    var dx = particle.x - this.x;
-                    var dy = particle.y - this.y;
-                    var d = Math.sqrt(dx * dx + dy * dy);
+                var dx = particle.x - this.x;
+                var dy = particle.y - this.y;
+                var d = Math.sqrt(dx * dx + dy * dy);
 
-                    if (d > this.outer_r + particle.outer_r) continue;
+                if (d > this.outer_r + particle.outer_r) continue;
 
-                    d = Math.max(.01, d);
+                d = Math.max(.01, d);
 
-                    var nx = dx / d;
-                    var ny = dy / d;
-                    var force = -1;
+                var nx = dx / d;
+                var ny = dy / d;
+                var force = -1;
 
-                    force /= Math.max(d, .001);
-                    force *= 20;
-                    
-                    this.vx += nx * force;
-                    this.vy += ny * force;
-                }
+                force /= Math.max(d, .001);
+                force *= 20;
+                
+                this.vx += nx * force;
+                this.vy += ny * force;
             }
 
             // movement
@@ -262,25 +285,23 @@
             context.lineWidth = 1;
             context.strokeStyle = this.color;
 
-            for (let word in words) {
-                for (let particle of words[word].particles) {
-                    if (particle == this) continue;
-                    if (particle.is_word_particle) continue;
+            for (let particle of particles) {
+                if (particle == this) continue;
+                if (particle.is_word_particle) continue;
 
-                    var dx = particle.x - this.x;
-                    var dy = particle.y - this.y;
-                    var d = Math.sqrt(dx * dx + dy * dy);
+                var dx = particle.x - this.x;
+                var dy = particle.y - this.y;
+                var d = Math.sqrt(dx * dx + dy * dy);
 
-                    if (d > this.outer_r + particle.outer_r) continue;
-                    
-                    var nx = dx / d;
-                    var ny = dy / d;
+                if (d > this.outer_r + particle.outer_r) continue;
+                
+                var nx = dx / d;
+                var ny = dy / d;
 
-                    context.beginPath();
-                    context.moveTo(this.x, this.y);
-                    context.lineTo(particle.x, particle.y);
-                    context.stroke();
-                }
+                context.beginPath();
+                context.moveTo(this.x, this.y);
+                context.lineTo(particle.x, particle.y);
+                context.stroke();
             }
         }
 
@@ -292,17 +313,27 @@
         }
 
         destroy() {
-            for (let i=0; i<words[this.word].particles.length; i++) {
-                if (words[this.word].particles[i] == this) {
-                    words[this.word].particles.splice(i, 1);
+            words[this.word].particleCount--;
+            for (let i=0; i<particles.length; i++) {
+                if (particles[i] == this) {
+                    particles.splice(i, 1);
                     this.active = false;
-                    return;
+                    break;
                 }
+            }
+
+            if (words[this.word].particleCount <= 0) {
+                for (let particle of particles) {
+                    if (particle.word == this.word) particle.destroy();
+                }
+                delete words[this.word];
             }
         }
     }
 
     class WordParticle extends Particle {
+        glow = 0;
+
         constructor(word) {
             super(word, Math.random() * canvas.width, Math.random() * canvas.height);
 
@@ -318,65 +349,144 @@
             let dy = mouse.y - this.y;
             let d = Math.sqrt(dx*dx+dy*dy);
 
-            if (d < this.r) {
-                words[this.word].hovered = true;
-                document.body.classList.add("hover");
-            } else {
-                words[this.word].hovered = false;
-            }
+            if (words[this.word]) {
+                if (d < this.r) {
+                    words[this.word].hovered = true;
+                    document.body.classList.add("hover");
+                } else {
+                    words[this.word].hovered = false;
+                }
 
-            if (mouse.down && words[this.word].hovered) {
-                words[this.word].select();
+                if (mouse.up && words[this.word].hovered) {
+                    words[this.word].select();
+                }
             }
         }
 
         draw() {
-            this.r = 40 + words[this.word].particles.length/2;
-            this.outer_r = 60 + words[this.word].particles.length/2;
+            if (!this.active) return;
 
-            if (words[this.word].selected) {
-                context.shadowBlur = 50;
-                context.shadowColor = this.color;
+            var particleCount = words[this.word] ? words[this.word].particleCount : 0;
+            this.r = 40 + particleCount/2;
+            this.outer_r = 60 + particleCount/2;
+
+            if (words[this.word]) {
+                if (words[this.word].selected) {
+                    this.glow = lerp(this.glow, 50, .1);
+                } else {
+                    this.glow = lerp(this.glow, 0, .1);
+                }
+            } else {
+                if (!this.die) {
+                    this.glow = lerp(this.glow, 30, .2);
+                    if (this.glow >= 29) {
+                        this.die = true;
+                    }
+                } else {
+                    this.glow = lerp(this.glow, 0, .2);
+                    if (this.glow <= 1) {
+                        for (let i=0; i<particles.length; i++) {
+                            if (particles[i] == this) {
+                                particles.splice(i, 1);
+                                this.active = false;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
+            context.shadowBlur = this.glow;
+            context.shadowColor = this.color;
+
+            context.strokeStyle = this.color;
             context.fillStyle = this.color;
             context.beginPath();
             context.arc(this.x, this.y, this.r, 0, Math.PI*2);
             context.fill();
 
-            if (words[this.word].selected) {
-                context.shadowBlur = 0;
+            context.shadowBlur = 0;
+
+            if (!words[this.word]) {
+                context.fillStyle = "white";
+                context.fill();
             }
 
-            context.fillStyle = this.color=="yellow" ? "black" : "white";
+            if (words[this.word]) {
+                context.fillStyle = this.color=="yellow" ? "black" : "white";
+                context.textBaseline = "middle";
+                context.textAlign = "center";
+                context.font = "30px sans-serif";
+                context.fillText(this.word, this.x, this.y);
+            }
+        }
+
+        destroy() { }
+    }
+
+    class AddWordParticle extends Particle {
+        constructor() {
+            super(null, window.innerWidth/2, window.innerHeight/2);
+            this.is_word_particle = true;
+            this.r = 40;
+            this.outer_r = 60;
+        }
+
+        update_mouse() {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let d = Math.sqrt(dx*dx+dy*dy);
+
+            if (d < this.r) {
+                this.hovered = true;
+                document.body.classList.add("hover");
+            } else {
+                this.hovered = false;
+            }
+
+            if (mouse.up && this.hovered) {
+                document.querySelector("dialog#add-word").showModal();
+            }
+        }
+
+        drawLines() { }
+
+        draw() {
+            context.strokeStyle = "black";
+            context.fillStyle = "white";
+            context.beginPath();
+            context.arc(this.x, this.y, this.r, 0, Math.PI*2);
+            context.fill();
+            context.stroke();
+
+            context.fillStyle = "black";
             context.textBaseline = "middle";
             context.textAlign = "center";
             context.font = "30px sans-serif";
-            context.fillText(this.word, this.x, this.y);
+            context.fillText("+", this.x, this.y);
         }
     }
 
     window.onload = function() {
         window.onresize();
 
-        new Word("상실");
-        new Word("희망");
-        new Word("사랑");
-        new Word("의지");
-        new Word("좌절");
+        new AddWordParticle();
 
-        words["상실"].select();
-
-        var wordsarray = Object.keys(words);
-        for (let i=0; i<100; i++) {
-            new Particle(
-                wordsarray[ Math.random() * wordsarray.length | 0 ],
-                Math.random() * canvas.width,
-                Math.random() * canvas.height
-            );
+        var examples = ["낭만", "긍정", "모험", "성취", "헌신", "균형", "도전", "배움", "연대", "고독", "갈망", "극복", "집념", "추억", "평화"];
+        shuffleArray(examples);
+        for (let i=0; i<5; i++) {
+            new Word(examples[i]);
         }
+        words[examples[0]].select();
 
         draw();
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
 
     window.onresize = function() {
@@ -391,6 +501,7 @@
 
     var mouse = {
         down: false,
+        up: false,
         x: 0,
         y: 0
     }
@@ -407,6 +518,7 @@
     canvas.addEventListener("mouseup", (e) => {
         mouse.down = false;
         mouse.right = false;
+        mouse.up = true;
     });
 
     canvas.addEventListener("blur", (e) => {
@@ -433,18 +545,18 @@
 
         draw_particles();
 
+        mouse.up = false;
+
         requestAnimationFrame(draw);
     }
 
     function draw_particles() {
-        for (let word in words) {
-            for (let particle of words[word].particles) {
-                particle.update();
-                particle.drawLines();
-            }
-            for (let particle of words[word].particles) {
-                particle.draw();
-            }
+        for (let particle of particles) {
+            particle.update();
+            particle.drawLines();
+        }
+        for (let particle of particles) {
+            particle.draw();
         }
 
         if (mouse.down && !mouse.right && !document.body.classList.contains("hover")) {
@@ -463,6 +575,37 @@
 
     function lerp( a, b, alpha ) {
         return a + alpha * ( b - a )
+    }
+
+    function add_word(dialog) {
+        var input = dialog.querySelector("input");
+        var word = input.value.trim();
+        if (word == "") {
+            return;
+        } else {
+            var new_word = new Word(word);
+            new_word.select();
+            input.value = "";
+            dialog.close();
+        }
+    }
+
+    document.querySelector(".word-input").addEventListener("keypress", function(e) {
+        if (e.key == "Enter") {
+            add_word(this.parentElement);
+        }
+    })
+
+    function saveBrain() {
+        var brain = {};
+        for (let word in words) {
+            brain[word] = {
+                color: words[word].color,
+                particles: words[word].particleCount
+            }
+        }
+        sessionStorage.setItem("brain", JSON.stringify(brain));
+        location.href = "upload-photo.html";
     }
 
 </script>

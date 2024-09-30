@@ -42,15 +42,23 @@
 
         .qr-code, .signature {
             position: absolute;
+            bottom: 5rem;
         }
 
         .signature {
-            bottom: 5rem;
             left: 45vw;
         }
-        .signature img {
+        .signature {
             max-height: 10rem;
             max-width: 20rem;
+        }
+
+        .qr-code {
+            display: block;
+            width: 10rem;
+            aspect-ratio: 1;
+            background: black;
+            right: 3rem;
         }
 
         .left-column .gradient {
@@ -81,8 +89,71 @@
             padding: .7rem;
             font-size: 1.25rem;
             border: 1px solid black;
-            /* transform-origin: 0% 100%;
-            transform: rotate(-90deg); */
+        }
+
+        .id-card {
+            position: relative;
+            width: 90%;
+            height: fit-content;
+            margin: auto;
+            margin-bottom: 0;
+
+            --rotate: 0;
+            transform: rotateZ(5deg);
+
+            filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, .25));
+        }
+
+        .id-card img,
+        .card-info {
+            max-width: 100%;
+            transform: rotateY(calc(1deg * var(--rotate)));
+        }
+
+        .card-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid transparent;
+            width: 100%;
+            height: 100%;
+            font-family: var(--sans-serif);
+            font-size: 1vw;
+            color: rgb(110, 110, 110);
+        }
+        .card-info div, .card-info img {
+            position: absolute;
+            right: 6%;
+            border: none;
+            transform: none;
+        }
+        .card-info .name {
+            top: 20%;
+        }
+        .card-info .date {
+            top: 30%;
+        }
+        .card-info .signature {
+            width: 20%;
+            left: unset;
+            right: 0;
+            bottom: 14%;
+        }
+        .card-info .picture {
+            width: 38%;
+            aspect-ratio: 1123/1062;
+            background: red;
+            top: 19%;
+            left: 5.6%;
+            object-fit: cover;
+        }
+
+        canvas.brain {
+            width: 50%;
+            top: 49%;
+            position: absolute;
+            right: 4%;
+            height: 25%
         }
     </style>
 </head>
@@ -101,16 +172,23 @@
             </div>
     
             <div class="right-column">
-                <img src="res/id.webp">
+                <div class="id-card">
+                    <img src="res/id_front.png" alt="">
+                    <div class="card-info">
+                        <div class="name"></div>
+                        <div class="date"></div>
+                        <img class="picture" src="" alt="">
+                        <img class="signature" src="" alt="">
+                        <canvas class="brain"></canvas>
+                    </div>
+                </div>
             </div>
 
             <div class="qr-code">
                 
             </div>
 
-            <div class="signature">
-
-            </div>
+            <img class="signature"></img>
         </main>
 
         <footer>
@@ -132,6 +210,99 @@
     document.querySelectorAll(".name").forEach((el) => {
         el.textContent = sessionStorage.getItem("name");
     })
+    
+    document.querySelectorAll(".picture").forEach((el) => {
+        el.src = sessionStorage.getItem("picture");
+    })
+
+    document.querySelectorAll(".signature").forEach((el) => {
+        el.src = sessionStorage.getItem("signature");
+    })
+
+    setTimeout(() => {
+        var brain_canvas = document.querySelector(".brain");
+        var brain = JSON.parse(sessionStorage.getItem("brain"));
+        brain_canvas.width = brain_canvas.clientWidth * window.devicePixelRatio;
+        brain_canvas.height = brain_canvas.clientHeight * window.devicePixelRatio;
+        var context = brain_canvas.getContext("2d");
+        context.font = "30px sans-serif";
+        
+        var total_particles = 0;
+        for (let word in brain) {
+            total_particles += brain[word].particles;
+        }
+        var particle_ratio = brain_canvas.width / total_particles;
+        var x = brain_canvas.width;
+        for (let word in brain) {
+            var radius = Math.min(brain[word].particles/2 * particle_ratio, brain_canvas.height/2);
+            radius = Math.max(radius, brain_canvas.height/5);
+            x -= radius;
+
+            var y = brain_canvas.height/2;
+            y += (Math.random() - .5) * (brain_canvas.height - radius*2);
+
+            context.beginPath();
+            context.arc(x, y, radius, 0, Math.PI*2);
+            context.fillStyle = brain[word].color;
+            context.fill();
+
+            context.textBaseline = "middle";
+            context.textAlign = "center";
+            context.fillStyle = brain[word].color=="yellow" ? "black" : "white";
+            context.fillText(word, x, y);
+            x -= radius - (Math.random() * 20);
+        }
+    }, 100);
+
+    document.querySelectorAll(".date").forEach((el) => {
+        var day = new Date().getDate();
+        if (day < 10) day = "0"+day;
+        el.textContent = "2024.10." + day;
+    })
+
+    document.querySelectorAll(".signature").forEach((el) => {
+        el.style.background = "url(" + sessionStorage.getItem("signature") + ")";
+    })
+
+    var mouse = { x:0, y:0 };
+    var id_card = {
+        element: document.querySelector(".id-card"),
+        tilt: 0,
+        flip: 0
+    };
+
+    document.addEventListener("mousemove", (e) => {
+        mouse.x = e.pageX / window.innerWidth;
+        mouse.y = e.pageY / window.innerHeight;
+
+        mouse.x = (mouse.x - .5) * 2;
+        mouse.y = (mouse.y - .5) * 2;
+    });
+
+    draw();
+
+    var _previousTime = new Date();
+    function draw() {
+        var now = new Date();
+        var delta = now - _previousTime;
+
+        //
+
+        id_card.tilt = lerp(id_card.tilt, mouse.y * 5, .1);
+        id_card.flip = lerp(id_card.flip, Math.abs(mouse.x) * 45, .1);
+
+        id_card.element.style.setProperty("--rotate", id_card.flip);
+        id_card.element.style.setProperty("transform", "rotateZ(" + id_card.tilt + "deg)");
+
+        //
+
+        _previousTime = now;
+        requestAnimationFrame(draw);
+    }
+
+    function lerp( a, b, alpha ) {
+        return a + alpha * ( b - a )
+    }
 </script>
 
 </html>

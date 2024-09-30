@@ -97,6 +97,9 @@
             color: rgba(0, 0, 0, .25);
             cursor: default;
         }
+        a.disabled::before {
+            opacity: .25;
+        }
     </style>
 </head>
 <body>
@@ -115,10 +118,10 @@
                     <canvas></canvas>
                 </div>
                 <div>
-                    <a class="toggleable disabled">&gt; 서명 기입에 동의합니다.</a>
+                    <a class="toggleable disabled">서명 기입에 동의합니다.</a>
                 </div>
             </div>
-            <a href=""><button class="contract-button" onclick="history.back()">이전</button></a>
+            <a href=""><button class="contract-button" onclick="history.back()" type="button">이전</button></a>
         </main>
 
         <footer>
