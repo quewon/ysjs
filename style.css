@@ -178,3 +178,12 @@ a.toggleable::before {
 a.toggleable.selected::before {
     content: url("res/checked_box.svg");
 }
+
+dialog {
+    padding: 2rem;
+    border: 1.5px solid black;
+    text-align: center;
+}
+dialog button {
+    font-size: inherit;
+}

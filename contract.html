@@ -105,6 +105,13 @@
                 box-shadow: 0 4px 4px rgba(0, 0, 0, .25);
             }
         }
+
+        .contract-button {
+            opacity: .25;
+        }
+        .contract-button.changed {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -137,7 +144,8 @@
                     </div>
                 </div>
             </div>
-            <a href=""><button class="contract-button" onclick="history.back()" type="button">이전</button></a>
+            <button onclick="history.back()" type="button">이전</button>
+            <a href=""><button class="contract-button">다음</button></a>
         </main>
 
         <footer>
@@ -166,13 +174,11 @@
         
         var button = document.querySelector(".contract-button");
         if (document.querySelectorAll("a.selected").length == 3) {
-            button.textContent = "다음";
             button.onclick = null;
             button.parentElement.href = "signature.html";
             button.classList.add("changed");
         } else {
             button.classList.remove("changed");
-            button.textContent = "이전";
             button.onclick = history.back;
             button.parentElement.href = "";
         }

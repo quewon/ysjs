@@ -46,7 +46,7 @@
         }
 
         .signature {
-            left: 45vw;
+            left: 5vw;
         }
         .signature {
             max-height: 10rem;
@@ -94,6 +94,7 @@
         .id-card {
             position: relative;
             width: 90%;
+            max-width: 30rem;
             height: fit-content;
             margin: auto;
             margin-bottom: 0;
@@ -142,7 +143,6 @@
         .card-info .picture {
             width: 38%;
             aspect-ratio: 1123/1062;
-            background: red;
             top: 19%;
             left: 5.6%;
             object-fit: cover;
@@ -154,6 +154,37 @@
             position: absolute;
             right: 4%;
             height: 25%
+        }
+
+        .center-card .left-column {
+            transition: width 5s, opacity 5s;
+            width: 0;
+            opacity: 0;
+        }
+        .center-card .right-column {
+            width: 100%;
+            transition: border-color 7s, width 5s;
+            border-color: transparent;
+        }
+        .return-button {
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            translate: -50% -50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .center-card .return-button {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .return-button button {
+            opacity: 0;
+            font-family: var(--old-computer);
+        }
+        .center-card .return-button button {
+            opacity: 1;
+            transition: opacity 5s;
         }
     </style>
 </head>
@@ -182,13 +213,15 @@
                         <canvas class="brain"></canvas>
                     </div>
                 </div>
-            </div>
 
-            <div class="qr-code">
+                <div class="qr-code">
                 
-            </div>
+                </div>
+    
+                <img class="signature"></img>
 
-            <img class="signature"></img>
+                <a class="return-button" href="index.html"><button>메인으로 돌아가기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
+            </div>
         </main>
 
         <footer>
@@ -303,6 +336,10 @@
     function lerp( a, b, alpha ) {
         return a + alpha * ( b - a )
     }
+
+    setTimeout(() => {
+        document.body.classList.add("center-card");
+    }, 3000);
 </script>
 
 </html>

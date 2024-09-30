@@ -74,6 +74,13 @@
         </footer>
 
     </div>
+
+    <dialog id="confirm">
+        <b class="name"> </b> 님이 맞습니까?<br>
+        <br>
+        <a onclick="this.parentElement.close()"><button>취소</button></a>
+        <a href="uploading-memory.html"><button>확인</button></a>
+    </dialog>
     
 </body>
 
@@ -93,7 +100,9 @@
         var value = input.value.trim();
         if (value != "") {
             sessionStorage.setItem("name", value);
-            location.href = "uploading-memory.html";
+            var dialog = document.querySelector("dialog#confirm");
+            dialog.querySelector(".name").textContent = value;
+            dialog.showModal();
         }
     }
 

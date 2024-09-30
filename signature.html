@@ -100,6 +100,25 @@
         a.disabled::before {
             opacity: .25;
         }
+
+        main h3 {
+            position: absolute;
+            top: 0;
+            right: 0;
+            translate: 0 -100%;
+            font-size: .75rem;
+            font-family: var(--sans-serif);
+            font-weight: normal;
+            margin: 0;
+            line-height: 2em;;
+        }
+
+        .contract-button {
+            opacity: .25;
+        }
+        .contract-button.changed {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +128,7 @@
         <div class="right-column"></div>
 
         <main>
+            <h3>*해당 서명은 전시의 일부로, 법적 효력이 작용하지 않습니다.</h3>
             <div class="contract">
                 <div style="border-bottom: 1px solid black; display: flex; justify-content: space-between; padding: .4rem 1.5rem;">
                     <h1 style="font-size: 1.5rem">서명</h1>
@@ -121,7 +141,8 @@
                     <a class="toggleable disabled">서명 기입에 동의합니다.</a>
                 </div>
             </div>
-            <a href=""><button class="contract-button" onclick="history.back()" type="button">이전</button></a>
+            <button onclick="history.back()" type="button">이전</button>
+            <a href=""><button class="contract-button">다음</button></a>
         </main>
 
         <footer>
@@ -144,20 +165,17 @@
 </body>
 
 <script>
-
     function toggle(a) {
         a.classList.toggle("selected");
 
         var button = document.querySelector(".contract-button");
         if (document.querySelectorAll("a.selected").length == 1) {
-            button.textContent = "다음";
             button.onclick = null;
             button.onmousedown = save_image();
             button.parentElement.href = "generating-id.html";
             button.classList.add("changed");
         } else {
             button.classList.remove("changed");
-            button.textContent = "이전";
             button.onclick = history.back;
             button.parentElement.href = "";
         }
