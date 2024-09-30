@@ -68,7 +68,7 @@
             
             display: flex;
             flex-direction: column;
-            gap: .5em;
+            gap: 1em;
             justify-content: end;
             padding-bottom: var(--floor);
         }
@@ -102,6 +102,11 @@
             box-shadow: inset 10px 4px 4px rgba(0, 0, 0, .25);
             border: 1px solid black;
         }
+
+        .fadein {
+            opacity: 0;
+            transition: opacity 2s;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +114,7 @@
     <div class="container">
 
         <main>
-            <div class="left-column">
+            <div class="left-column fadein">
                 <h1>*무료제공*</h1>
                 <h2>*2,000,000원 상당의 상품</h2>
 
@@ -124,8 +129,8 @@
             </div>
     
             <div class="right-column">
-                <a href="contract-viewonly.html"><button><img class="icon" src="res/folder icon.svg"> 혜택 약정 자세히 보기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a><br>
-                <a href="name.html"><button><img class="icon" src="res/folder icon.svg"> 디지털 영생 가입하기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
+                <a class='fadein' href="contract-viewonly.html"><button><img class="icon" src="res/folder icon.svg"> 혜택 약정 자세히 보기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
+                <a class='fadein' href="name.html"><button><img class="icon" src="res/folder icon.svg"> 디지털 영생 가입하기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
             </div>
         </main>
 
@@ -141,9 +146,17 @@
             <span></span>
         </footer>
 
-        <a class="logo" href="index.html"><img src="res/logo.svg"></a>
+        <a class="logo fadein" href="index.html"><img src="res/logo.svg"></a>
     </div>
     
 </body>
+
+<script>
+    window.onload = function() {
+        document.querySelectorAll(".fadein").forEach((el) => {
+            el.style.opacity = 1;
+        })
+    }
+</script>
 
 </html>

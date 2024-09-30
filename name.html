@@ -36,6 +36,18 @@
         .input-button img {
             height: var(--input-height);
         }
+
+        dialog {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            border: 1.5px solid black;
+            text-align: center;
+        }
+        dialog button {
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -76,10 +88,12 @@
     </div>
 
     <dialog id="confirm">
-        <b class="name"> </b> 님이 맞습니까?<br>
+        <span><b class="name"> </b> 님이 맞습니까?<br></span>
         <br>
-        <a onclick="this.parentElement.close()"><button>취소</button></a>
-        <a href="uploading-memory.html"><button>확인</button></a>
+        <div>
+            <a onclick="this.parentElement.close()"><button>취소</button></a>
+            <a href="uploading-memory.html"><button>확인</button></a>
+        </div>
     </dialog>
     
 </body>
