@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo.png">
+    <title>CMSS | 사진</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+        main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        h1, h2 {
+            margin: 0;
+            font-weight: normal;
+            font-family: var(--sans-serif);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            white-space: nowrap;
+            color: #8D8D8D;
+        }
+
+        .name {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .card {
+            white-space: nowrap;
+            font-size: 1.25rem;
+            border: 1.25px solid black;
+            padding: 1em;
+            line-height: 1.65em;
+            width: fit-content;
+            margin: auto;
+        }
+
+        main img {
+            margin: auto;
+            height: 6rem;
+        }
+
+        button {
+            background: white;
+        }
+
+        .right-column {
+            right: 1.5em;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .photobooth {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100svh;
+        }
+        video {
+            transform: rotateY(180deg);
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+        .flash.hidden {
+            transition: opacity 1s;
+        }
+        .flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            transition: none;
+        }
+        .timer {
+            font-size: 2rem;
+            text-shadow: red 0 0 10px;
+            color: white;
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+            font-family: var(--old-computer);
+        }
+
+        .photo-results img {
+            max-width: 40vw;
+            cursor: pointer;
+        }
+        img.square {
+            aspect-ratio: 1;
+            object-fit: cover;
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+        .photo-results img.selected {
+            border: 8px solid var(--brand-green);
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            right: 5rem;
+            bottom: 10%;
+            width: 20rem;
+            gap: 1rem;
+        }
+        .buttons button {
+            font-size: 1.25rem;
+            width: 100%;
+            text-align: right;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
+        </header>
+
+        <div class="right-column"></div>
+
+        <main>
+            <h1><b class="name">이름</b> 님</h1>
+            <div class="card">
+                영구적으로 소장될 당신의 ID 카드에 들어갈<br>
+                프로필 사진을 찍어드립니다.
+            </div>
+            <a onclick="take_photos()"><img style="cursor: pointer" src="res/camera.svg"></a>
+            <h2>찍을 준비가 되었다면, 카메라 아이콘을 클릭해주세요.</h2>
+        </main>
+
+        <div class="photobooth hidden">
+            <video autoplay muted></video>
+            <div class="timer hidden"></div>
+            <div class="flash hidden"></div>
+        </div>
+
+        <div class="photo-results hidden">
+            <img style="position: absolute; top: 10%; right: 7%;" />
+            <div style="position: absolute; bottom: 10%; left: 10%; display: flex; gap: 1rem; height: 30%">
+                <img class="square selected" />
+                <img class="square" />
+            </div>
+            <div class="buttons">
+                <button onclick="take_photos()">새로 찍기 <img class="icon" src="res/arrowright.svg" alt="→"></button>
+                <button onclick="select_photo()">선택 하기 <img class="icon" src="res/arrowright.svg" alt="→"></button>
+            </div>
+        </div>
+
+        <footer>
+            <span></span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span>|</span>
+            <span>문의전화 0310-6700-1515</span>
+            <span>|</span>
+            <span>무료상담</span>
+            <span>|</span>
+            <span>(주) 첨단 메모리 시스템</span>
+            <span></span>
+        </footer>
+
+    </div>
+
+    <canvas></canvas>
+    
+</body>
+
+<script>
+    
+    document.querySelectorAll(".name").forEach((el) => {
+        el.textContent = sessionStorage.getItem("name");
+    })
+
+    var photobooth = document.querySelector(".photobooth");
+    var video = document.querySelector("video");
+    var timer = document.querySelector(".timer");
+    var flash = document.querySelector(".flash");
+
+    var photo_results = document.querySelector(".photo-results");
+    var photo_index = 0;
+    var canvas = document.querySelector("canvas");
+    var context = canvas.getContext("2d");
+    context.scale(-1, 1);
+
+    photo_results.querySelectorAll("img").forEach((el) => {
+        el.onclick = function() {
+            document.querySelector("img.selected").classList.remove("selected");
+            this.classList.add("selected");
+        }
+    })
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function countdown() {
+        timer.classList.remove("hidden");
+        timer.textContent = "3";
+        await sleep(1000);
+        timer.textContent = "2";
+        await sleep(1000);
+        timer.textContent = "1";
+        await sleep(1000);
+        timer.classList.add("hidden");
+    }
+
+    async function shutter() {
+        flash.classList.remove("hidden");
+
+        await sleep(75);
+
+        flash.classList.add("hidden");
+
+        video.pause();
+
+        // take photo
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.translate(canvas.width, 0);
+        context.scale(-1, 1);
+        context.drawImage(video, 0, 0);
+        var data = canvas.toDataURL();
+        photo_results.querySelectorAll("img")[photo_index].src = data;
+        photo_index++;
+        if (photo_index >= 3) photo_index = 0;
+
+        await sleep(1200);
+
+        video.play();
+    }
+
+    async function take_photos() {
+        document.querySelector("main").classList.add("hidden");
+        photo_results.classList.add("hidden");
+        video.srcObject = await navigator.mediaDevices.getUserMedia({ video: true });
+        photobooth.classList.remove("hidden");
+        
+        for (let i=0; i<3; i++) {
+            await sleep(1000);
+            await countdown();
+            await shutter();
+            await sleep(1000);
+        }
+
+        photobooth.classList.add("hidden");
+        photo_results.classList.remove("hidden");
+    }
+
+    function select_photo() {
+        sessionStorage.setItem("picture", document.querySelector("img.selected").src);
+        location.href = "contract.html";
+    }
+    
+</script>
+
+</html>

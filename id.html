@@ -45,14 +45,6 @@
             bottom: 5rem;
         }
 
-        .signature {
-            left: 5vw;
-        }
-        .signature {
-            max-height: 10rem;
-            max-width: 20rem;
-        }
-
         .qr-code {
             display: block;
             width: 10rem;
@@ -214,11 +206,7 @@
                     </div>
                 </div>
 
-                <div class="qr-code">
-                
-                </div>
-    
-                <img class="signature"></img>
+                <div class="qr-code"></div>
 
                 <a class="return-button" href="index.html"><button>메인으로 돌아가기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
             </div>
@@ -252,7 +240,14 @@
         el.src = sessionStorage.getItem("signature");
     })
 
-    setTimeout(() => {
+    var id_image = document.querySelector(".id-card > img");
+    if (id_image.complete) {
+        on_image_load();
+    } else {
+        id_image.addEventListener("load", on_image_load);
+    }
+
+    function on_image_load() {
         var brain_canvas = document.querySelector(".brain");
         var brain = JSON.parse(sessionStorage.getItem("brain"));
         brain_canvas.width = brain_canvas.clientWidth * window.devicePixelRatio;
@@ -285,12 +280,17 @@
             context.fillText(word, x, y);
             x -= radius - (Math.random() * 20);
         }
-    }, 1000);
+
+        var picture = document.querySelector(".picture");
+        if (picture.complete) {
+            create_share_code();
+        } else {
+            picture.addEventListener('load', create_share_code)
+        }
+    };
 
     document.querySelectorAll(".date").forEach((el) => {
-        var day = new Date().getDate();
-        if (day < 10) day = "0"+day;
-        el.textContent = "2024.10." + day;
+        el.textContent = get_date();
     })
 
     document.querySelectorAll(".signature").forEach((el) => {
@@ -314,22 +314,13 @@
 
     draw();
 
-    var _previousTime = new Date();
     function draw() {
-        var now = new Date();
-        var delta = now - _previousTime;
-
-        //
-
         id_card.tilt = lerp(id_card.tilt, mouse.y * 5, .1);
         id_card.flip = lerp(id_card.flip, Math.abs(mouse.x) * 45, .1);
 
         id_card.element.style.setProperty("--rotate", id_card.flip);
         id_card.element.style.setProperty("transform", "rotateZ(" + id_card.tilt + "deg)");
 
-        //
-
-        _previousTime = now;
         requestAnimationFrame(draw);
     }
 
@@ -340,6 +331,164 @@
     setTimeout(() => {
         document.body.classList.add("center-card");
     }, 3000);
+
+    function create_share_code() {
+        const padding = id_image.naturalWidth/2;
+
+        var canvas = document.createElement("canvas");
+        canvas.style.position = "absolute";
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.width = id_image.width + "px";
+        canvas.style.height = id_image.height + "px";
+
+        var context = canvas.getContext("2d");
+        canvas.width = canvas.height = id_image.naturalWidth + padding;
+
+        var offset_x = padding/2;
+        var offset_y = (canvas.height - id_image.naturalHeight) / 2;
+
+        context.translate(offset_x, offset_y);
+
+        context.fillStyle = "white";
+        context.fillRect(-offset_x, -offset_y, canvas.width, canvas.height);
+
+        var bg = new Image();
+        bg.src = "res/background.png";
+        var bg_bounds = { x: -offset_x, y: -offset_y, width: canvas.width, height: canvas.height };
+        var bg_scale = 1;
+        var bg_offset = { x:0, y:0 };
+        bg_scale = Math.max(
+            bg_bounds.height / bg.naturalHeight,
+            bg_bounds.width / bg.naturalWidth
+        );
+        bg_offset.x = (bg_bounds.width - (bg.naturalWidth * bg_scale)) / 2;
+        bg_offset.y = (bg_bounds.height - (bg.naturalHeight * bg_scale)) / 2;
+        context.drawImage(
+            bg,
+            -bg_offset.x/2, -bg_offset.y/2,
+            bg.naturalWidth + bg_offset.x,
+            bg.naturalHeight + bg_offset.y,
+            bg_bounds.x,
+            bg_bounds.y,
+            bg_bounds.width,
+            bg_bounds.height
+        );
+
+        context.shadowColor = "rgba(0, 0, 0, .25)";
+        context.shadowBlur = 60;
+        context.shadowOffsetX = 10;
+        context.shadowOffsetY = 20;
+        context.drawImage(id_image, 0, 0);
+        context.shadowColor = "transparent";
+
+        var picture = document.querySelector(".picture");
+        var picture_bounds = { x: 172, y: 340, width: 1123, height: 1062 };
+        var picture_scale = 1;
+        var picture_offset = { x:0, y:0 };
+        picture_scale = Math.max(
+            picture_bounds.height / picture.naturalHeight,
+            picture_bounds.width / picture.naturalWidth
+        );
+        picture_offset.x = (picture_bounds.width - (picture.naturalWidth * picture_scale)) / 2;
+        picture_offset.y = (picture_bounds.height - (picture.naturalHeight * picture_scale)) / 2;
+        context.drawImage(
+            picture,
+            -picture_offset.x/2, -picture_offset.y/2,
+            picture.naturalWidth + picture_offset.x,
+            picture.naturalHeight + picture_offset.y,
+            picture_bounds.x,
+            picture_bounds.y,
+            picture_bounds.width,
+            picture_bounds.height
+        );
+
+        context.font = "85px sans-serif";
+        context.fillStyle = "rgb(110, 110, 110)";
+        context.textAlign = "right";
+        context.textBaseline = "middle";
+        context.fillText(sessionStorage.getItem("name"), 2845, 416);
+        context.fillText(get_date(), 2845, 596);
+
+        var brain_canvas = document.querySelector(".brain");
+        var brain_bounds = { x: 1450, y: 877, width: 1361, height: 453 };
+        var brain_scale = 1;
+        var brain_offset = { x:0, y:0 };
+        brain_scale = Math.min(
+            brain_bounds.height / brain_canvas.height,
+            brain_bounds.width / brain_canvas.width
+        );
+        brain_offset.x = (brain_bounds.width - (brain_canvas.width * brain_scale)) / 2;
+        brain_offset.y = (brain_bounds.height - (brain_canvas.height * brain_scale)) / 2;
+        context.drawImage(
+            brain_canvas,
+            -brain_offset.x/2, -brain_offset.y/2,
+            brain_canvas.width + brain_offset.x,
+            brain_canvas.height + brain_offset.y,
+            brain_bounds.x,
+            brain_bounds.y,
+            brain_bounds.width,
+            brain_bounds.height
+        );
+
+        var sign = document.querySelector(".signature");
+        var sign_bounds = { x: 2430, y: 1369, width: 442, height: 160 };
+        var sign_scale = 1;
+        var sign_offset = { x:0, y:0 };
+        sign_scale = Math.min(
+            sign_bounds.height / sign.naturalHeight,
+            sign_bounds.width / sign.naturalWidth
+        );
+        sign_offset.x = (sign_bounds.width - (sign.naturalWidth * sign_scale)) / 2;
+        sign_offset.y = (sign_bounds.height - (sign.naturalHeight * sign_scale)) / 2;
+        context.drawImage(
+            sign,
+            -sign_offset.x/2, -sign_offset.y/2,
+            sign.naturalWidth + sign_offset.x,
+            sign.naturalHeight + sign_offset.y,
+            sign_bounds.x,
+            sign_bounds.y,
+            sign_bounds.width,
+            sign_bounds.height
+        );
+
+        var blob = canvas.toBlob(
+            (blob) => {
+                const filename = sessionStorage.getItem("name")+" "+get_time()+".jpg";
+                var a = document.createElement("a");
+                var url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                // fetch("https://script.google.com/macros/s/AKfycbyiOvKYYzbadm05LklsFMCS6xgGlSMqQ5h_qbnnM08xsliruBxQ0bIMPy3dLaur2B3t/exec", {
+                //     method: "POST",
+                //     body: {
+                //         name: filename,
+                //         blob: blob
+                //     }
+                // })
+                // .then((res) => {
+                //     console.log(res.json());
+                // })
+                // .catch((res) => {
+                //     console.log(res.json())
+                // })
+            },
+            "image/jpeg",
+            0.95,
+        );
+    }
+
+    function get_date() {
+        var day = new Date().getDate();
+        if (day < 10) day = "0"+day;
+        return "2024.10." + day;
+    }
+
+    function get_time() {
+        return new Date().toLocaleTimeString().replaceAll(":","-");
+    }
 </script>
 
 </html>

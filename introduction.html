@@ -74,6 +74,12 @@
                 right: 40vw;
             }
         }
+
+        .scroll-prompt {
+            margin-top: 10rem;
+            margin-left: 10rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +96,9 @@
                     축하합니다, 관리자님<br>
                     첫 임무를 성공적으로 수행하셨네요.
                 </p>
+                <div class="scroll-prompt">
+                    <img src="res/scroll_prompt.svg" alt="">
+                </div>
             </div>
     
         </div>
@@ -143,7 +152,6 @@
     
 </body>
 
-<script src="js/sound.js"></script>
 <script>
     const pages = document.getElementsByClassName("page");
     const container = document.querySelector(".container");
