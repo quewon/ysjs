@@ -5,7 +5,7 @@
 }
 
 :root {
-    --sans-serif: 'Pretendard', system-ui, sans-serif;
+    --sans-serif: 'Pretendard', system-ui, sans-serif, 'Helvetica';
     --old-computer: 'Apple Gothic', sans-serif;
     --brand-green: #03FF00;
 }
@@ -30,8 +30,8 @@ body {
     height: 100vh;
     overflow-x: hidden;
     overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scroll-snap-align: center;
+    /* scroll-snap-type: y mandatory;
+    scroll-snap-align: center; */
 }
 
 image {
@@ -43,7 +43,7 @@ image {
     position: absolute;
     top: 50%;
     left: 50%;
-    translate: -50% -50%;
+    transform: translate(-50%, -50%);
 }
 
 footer {
@@ -164,9 +164,9 @@ header .logomin {
 
 .page {
     position: relative;
-    height: 100svh;
+    height: 100vh;
     width: 100vw;
-    scroll-snap-align: start;
+    /* scroll-snap-align: start; */
 }
 
 a.toggleable::before {
@@ -177,4 +177,9 @@ a.toggleable::before {
 }
 a.toggleable.selected::before {
     content: url("res/checked_box.svg");
+}
+
+dialog {
+    top: 50%;
+    transform: translate(0, -50%);
 }

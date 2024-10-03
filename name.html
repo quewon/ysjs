@@ -9,11 +9,10 @@
     <style>
         .form {
             display: flex;
-            gap: 1rem;
             position: absolute;
             top: 70%;
             left: 50%;
-            translate: -50% -50%;
+            transform: translate(-50%, -50%);
 
             --input-height: 5rem;
         }
@@ -25,6 +24,7 @@
             width: 40rem;
             box-sizing: border-box;
             height: var(--input-height);
+            margin-right: 1rem;
         }
         input::placeholder {
             color: #C2C2C2;
@@ -105,7 +105,7 @@
     var input = document.querySelector("input");
 
     input.addEventListener("keypress", (e) => {
-        if (e.key == "Enter") {
+        if (e.code == "Enter") {
             submit();
         }
     })

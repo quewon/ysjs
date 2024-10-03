@@ -165,7 +165,7 @@
     ];
 
     container.addEventListener("scroll", function() {
-        var page = this.scrollTop / window.innerHeight;
+        var page = Math.max(this.scrollTop / window.innerHeight, 0);
 
         for (let transition of scrollTransitions) {
             const element = transition.element;

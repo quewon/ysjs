@@ -128,16 +128,19 @@
     var colors = ["red", "blue", "yellow", "orange", "purple", "green", "yellowgreen", "orangered", "cyan", "#080584"];
 
     class Word {
-        word;
-        color;
+        // word;
+        // color;
 
-        hovered = false;
-        selected = false;
+        // hovered = false;
+        // selected = false;
 
-        particleCount = 0;
-        particle_radius = 50;
+        // particleCount = 0;
+        // particle_radius = 50;
 
         constructor(word) {
+            this.particleCount = 0;
+            this.particle_radius = 50;
+
             if (word) words[word] = this;
 
             this.word = word;
@@ -178,21 +181,32 @@
     }
 
     class Particle {
-        word;
-        x;
-        y;
-        color;
+        // word;
+        // x;
+        // y;
+        // color;
 
-        r = 5;
-        outer_r;
-        vx = 0;
-        vy = 0;
+        // r = 5;
+        // outer_r;
+        // vx = 0;
+        // vy = 0;
 
-        friction = 1.1;
+        // friction = 1.1;
 
-        active = true;
+        // active = true;
 
         constructor(word, x, y) {
+            this.word = null;
+            this.x = null;
+            this.y = null;
+            this.color = null;
+            this.r = 5;
+            this.outer_r = null;
+            this.vx = 0;
+            this.vy = 0;
+            this.friction = 1.1;
+            this.active = true;
+
             particles.push(this);
             
             if (word) {
@@ -333,10 +347,11 @@
     }
 
     class WordParticle extends Particle {
-        glow = 0;
+        // glow = 0;
 
         constructor(word) {
             super(word, Math.random() * canvas.width, Math.random() * canvas.height);
+            this.glow = 0;
 
             this.r = 40;
             this.outer_r = 60;

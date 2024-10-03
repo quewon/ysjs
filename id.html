@@ -35,7 +35,6 @@
             
             display: flex;
             flex-direction: column;
-            gap: .5em;
             justify-content: end;
             padding-bottom: var(--floor);
         }
@@ -72,7 +71,7 @@
             position: absolute;
             bottom: var(--floor);
             left: 50%;
-            translate: -50% 0;
+            transform: translate(-50%, 0);
             white-space: nowrap;
         }
 
@@ -162,7 +161,7 @@
             position: absolute;
             top: 75%;
             left: 50%;
-            translate: -50% -50%;
+            transform: translate(-50%, -50%);
             opacity: 0;
             pointer-events: none;
         }
@@ -241,10 +240,20 @@
     })
 
     var id_image = document.querySelector(".id-card > img");
+    var bg = new Image();
+    bg.src = "res/background.png";
     if (id_image.complete) {
-        on_image_load();
+        imageload1();
     } else {
-        id_image.addEventListener("load", on_image_load);
+        id_image.addEventListener("load", imageload1);
+    }
+
+    function imageload1() {
+        if (bg.complete) {
+            on_image_load();
+        } else {
+            bg.addEventListener("load", on_image_load);
+        }
     }
 
     function on_image_load() {
@@ -353,8 +362,6 @@
         context.fillStyle = "white";
         context.fillRect(-offset_x, -offset_y, canvas.width, canvas.height);
 
-        var bg = new Image();
-        bg.src = "res/background.png";
         var bg_bounds = { x: -offset_x, y: -offset_y, width: canvas.width, height: canvas.height };
         var bg_scale = 1;
         var bg_offset = { x:0, y:0 };
@@ -452,32 +459,16 @@
             sign_bounds.height
         );
 
-        var blob = canvas.toBlob(
-            (blob) => {
-                const filename = sessionStorage.getItem("name")+" "+get_time()+".jpg";
-                var a = document.createElement("a");
-                var url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = filename;
-                a.click();
-                window.URL.revokeObjectURL(url);
-                // fetch("https://script.google.com/macros/s/AKfycbyiOvKYYzbadm05LklsFMCS6xgGlSMqQ5h_qbnnM08xsliruBxQ0bIMPy3dLaur2B3t/exec", {
-                //     method: "POST",
-                //     body: {
-                //         name: filename,
-                //         blob: blob
-                //     }
-                // })
-                // .then((res) => {
-                //     console.log(res.json());
-                // })
-                // .catch((res) => {
-                //     console.log(res.json())
-                // })
-            },
-            "image/jpeg",
-            0.95,
-        );
+        //
+
+        // var blob = canvas.toDataURL(
+        //     (blob) => {
+        //         var url = URL.createObjectURL(blob);
+        //         console.log(url);
+        //     },
+        //     "image/jpeg",
+        //     1,
+        // );
     }
 
     function get_date() {

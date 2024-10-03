@@ -17,7 +17,12 @@
 
             display: flex;
             flex-direction: column;
-            gap: 4rem;
+        }
+        main > * {
+            margin-bottom: 4rem !important;
+        }
+        main > *:last-child {
+            margin-bottom: 0;
         }
 
         h1, h2 {
@@ -126,7 +131,13 @@
             right: 5rem;
             bottom: 10%;
             width: 20rem;
-            gap: 1rem;
+            /* gap: 1rem; */
+        }
+        .buttons > * {
+            margin-bottom: 1rem;
+        }
+        .buttons > *:last-child {
+            margin-bottom: 0;
         }
         .buttons button {
             font-size: 1.25rem;
@@ -167,8 +178,8 @@
 
         <div class="photo-results hidden">
             <img style="position: absolute; top: 10%; right: 7%;" />
-            <div style="position: absolute; bottom: 10%; left: 10%; display: flex; gap: 1rem; height: 30%">
-                <img class="square selected" />
+            <div style="position: absolute; bottom: 10%; left: 10%; display: flex; height: 30%">
+                <img style="margin-right: 1rem;" class="square selected" />
                 <img class="square" />
             </div>
             <div class="buttons">
@@ -219,61 +230,80 @@
         }
     })
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    function sleep(ms, after) {
+        setTimeout(after, ms);
     }
 
-    async function countdown() {
+    // is this how people made countdowns
+    // before async functions existed...??
+    function countdown(after) {
         timer.classList.remove("hidden");
         timer.textContent = "3";
-        await sleep(1000);
-        timer.textContent = "2";
-        await sleep(1000);
-        timer.textContent = "1";
-        await sleep(1000);
-        timer.classList.add("hidden");
+        sleep(1000, () => {
+            timer.textContent = "2";
+            sleep(1000, () => {
+                timer.textContent = "1";
+                sleep(1000, () => {
+                    timer.classList.add("hidden");
+                    after();
+                })
+            })
+        })
     }
 
-    async function shutter() {
+    function shutter(after) {
         flash.classList.remove("hidden");
+        sleep(75, () => {
+            flash.classList.add("hidden");
+            video.pause();
 
-        await sleep(75);
+            // take photo
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
+            context.drawImage(video, 0, 0);
+            var data = canvas.toDataURL();
+            photo_results.querySelectorAll("img")[photo_index].src = data;
+            photo_index++;
+            if (photo_index >= 3) photo_index = 0;
 
-        flash.classList.add("hidden");
-
-        video.pause();
-
-        // take photo
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.translate(canvas.width, 0);
-        context.scale(-1, 1);
-        context.drawImage(video, 0, 0);
-        var data = canvas.toDataURL();
-        photo_results.querySelectorAll("img")[photo_index].src = data;
-        photo_index++;
-        if (photo_index >= 3) photo_index = 0;
-
-        await sleep(1200);
-
-        video.play();
+            sleep(1200, () => {
+                video.play();
+                after();
+            });
+        })
     }
 
-    async function take_photos() {
+    function take_photo(after) {
+        sleep(1000, () => {
+            countdown(() => {
+                shutter(() => {
+                    sleep(1000, after);
+                })
+            });
+        })
+    }
+
+    function take_photos() {
         document.querySelector("main").classList.add("hidden");
         photo_results.classList.add("hidden");
-        video.srcObject = await navigator.mediaDevices.getUserMedia({ video: true });
-        photobooth.classList.remove("hidden");
-        
-        for (let i=0; i<3; i++) {
-            await sleep(1000);
-            await countdown();
-            await shutter();
-            await sleep(1000);
-        }
+        navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
 
-        photobooth.classList.add("hidden");
-        photo_results.classList.remove("hidden");
+                photobooth.classList.remove("hidden");
+
+                take_photo(() => {
+                    take_photo(() => {
+                        take_photo(() => {
+                            photobooth.classList.add("hidden");
+                            photo_results.classList.remove("hidden");
+                        })
+                    })
+                })
+            })
     }
 
     function select_photo() {
