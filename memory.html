@@ -112,9 +112,9 @@
 </body>
 
 <script>
-    document.querySelectorAll(".name").forEach((el) => {
+    for (let el of document.getElementsByClassName("name")) {
         el.textContent = sessionStorage.getItem("name");
-    })
+    }
     document.querySelector("#intro").showModal();
 
     const canvas = document.querySelector("canvas");

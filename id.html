@@ -227,17 +227,17 @@
 </body>
 
 <script>
-    document.querySelectorAll(".name").forEach((el) => {
+    for (let el of document.getElementsByClassName("name")) {
         el.textContent = sessionStorage.getItem("name");
-    })
-    
-    document.querySelectorAll(".picture").forEach((el) => {
-        el.src = sessionStorage.getItem("picture");
-    })
+    }
 
-    document.querySelectorAll(".signature").forEach((el) => {
+    for (let el of document.getElementsByClassName("picture")) {
+        el.src = sessionStorage.getItem("picture");
+    }
+
+    for (let el of document.getElementsByClassName("signature")) {
         el.src = sessionStorage.getItem("signature");
-    })
+    }
 
     var id_image = document.querySelector(".id-card > img");
     var bg = new Image();
@@ -298,13 +298,13 @@
         }
     };
 
-    document.querySelectorAll(".date").forEach((el) => {
+    for (let el of document.getElementsByClassName("date")) {
         el.textContent = get_date();
-    })
+    }
 
-    document.querySelectorAll(".signature").forEach((el) => {
+    for (let el of document.getElementsByClassName("signature")) {
         el.style.background = "url(" + sessionStorage.getItem("signature") + ")";
-    })
+    }
 
     var mouse = { x:0, y:0 };
     var id_card = {

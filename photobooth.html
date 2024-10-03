@@ -9,10 +9,6 @@
     <style>
 
         main {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            translate: -50% -50%;
             text-align: center;
 
             display: flex;
@@ -160,7 +156,7 @@
 
         <div class="right-column"></div>
 
-        <main>
+        <main class="center">
             <h1><b class="name">이름</b> 님</h1>
             <div class="card">
                 영구적으로 소장될 당신의 ID 카드에 들어갈<br>
@@ -208,9 +204,10 @@
 
 <script>
     
-    document.querySelectorAll(".name").forEach((el) => {
-        el.textContent = sessionStorage.getItem("name");
-    })
+    var nameElements = document.getElementsByClassName("name");
+    for (let element of nameElements) {
+        element.textContent = sessionStorage.getItem("name");
+    }
 
     var photobooth = document.querySelector(".photobooth");
     var video = document.querySelector("video");
@@ -223,12 +220,13 @@
     var context = canvas.getContext("2d");
     context.scale(-1, 1);
 
-    photo_results.querySelectorAll("img").forEach((el) => {
+    var img_elements = photo_results.querySelectorAll("img");
+    for (let el of img_elements) {
         el.onclick = function() {
             document.querySelector("img.selected").classList.remove("selected");
             this.classList.add("selected");
         }
-    })
+    }
 
     function sleep(ms, after) {
         setTimeout(after, ms);
@@ -288,8 +286,10 @@
     function take_photos() {
         document.querySelector("main").classList.add("hidden");
         photo_results.classList.add("hidden");
-        navigator.mediaDevices
-            .getUserMedia({ video: true })
+
+        var mediaFunction = navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
+
+        mediaFunction({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
 

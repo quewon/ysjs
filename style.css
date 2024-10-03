@@ -26,14 +26,6 @@ body {
     overflow: hidden;
 }
 
-.container:has(.page) {
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    /* scroll-snap-type: y mandatory;
-    scroll-snap-align: center; */
-}
-
 image {
     image-rendering: crisp-edges;
     image-rendering: pixelated;

@@ -62,17 +62,21 @@
             flex-shrink: 0;
 
             right: 0;
-            width: calc(40vw + 1.5px);
+            width: 40vw;
             border: none;
             border-left: 1.5px solid black;
             
             display: flex;
             flex-direction: column;
-            gap: 1em;
-            justify-content: end;
+            /* gap: 1em; */
+            /* justify-content: end; */
             padding-bottom: var(--floor);
         }
-
+        .right-column > *:first-child { 
+            margin-top: auto;
+            margin-bottom: 1em;
+        }
+ 
         button {
             font-size: 1.25rem;
             font-family: var(--old-computer);
@@ -152,11 +156,9 @@
 </body>
 
 <script>
-    window.onload = function() {
-        var elements = document.getElementsByClassName("fadein");
-        for (let i=0; i<elements.length; i++) {
-            elements[i].style.opacity = 1;
-        }
+    var elements = document.getElementsByClassName("fadein");
+    for (let i=0; i<elements.length; i++) {
+        elements[i].style.opacity = 1;
     }
 </script>
 

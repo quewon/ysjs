@@ -29,7 +29,7 @@
             top: 0;
             left: 0;
             transform: rotateY(calc(180deg - 1deg * var(--rotate)));
-            z-index: calc(var(--rotate) - 90);
+            z-index: -1;
         }
 
         .arrow {
@@ -79,6 +79,12 @@
             margin-top: 10rem;
             margin-left: 10rem;
             text-align: center;
+        }
+
+        .container {
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -164,6 +170,8 @@
         }
     ];
 
+    var coupon = document.querySelector(".coupon");
+
     container.addEventListener("scroll", function() {
         var page = Math.max(this.scrollTop / window.innerHeight, 0);
 
@@ -175,6 +183,12 @@
                 transition.property, 
                 lerp(values[ Math.floor(page) ], values[ Math.min(Math.ceil(page), values.length-1) ], page - Math.floor(page))
             );
+        }
+
+        if (page > .5) {
+            coupon.style.zIndex = 1;
+        } else {
+            coupon.style.zIndex = -1;
         }
     });
 
