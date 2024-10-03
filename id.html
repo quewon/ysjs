@@ -228,19 +228,19 @@
 
 <script>
     var nameElements = document.getElementsByClassName("name");
-    for (let i=0; i<elements.length; i++) {
-        elements[i].textContent = sessionStorage.getItem("name");
+    for (let i=0; i<nameElements.length; i++) {
+        nameElements[i].textContent = sessionStorage.getItem("name");
     }
 
     var pictureElements = document.getElementsByClassName("picture");
-    for (let i=0; i<elements.length; i++) {
-        elements[i].src = sessionStorage.getItem("picture");
+    for (let i=0; i<pictureElements.length; i++) {
+        pictureElements[i].src = sessionStorage.getItem("picture");
     }
 
     var signatureElements = document.getElementsByClassName("signature");
-    for (let i=0; i<elements.length; i++) {
-        elements[i].src = sessionStorage.getItem("signature");
-        elements[i].style.background = "url(" + sessionStorage.getItem("signature") + ")";
+    for (let i=0; i<signatureElements.length; i++) {
+        signatureElements[i].src = sessionStorage.getItem("signature");
+        signatureElements[i].style.background = "url(" + sessionStorage.getItem("signature") + ")";
     }
 
     var id_image = document.querySelector(".id-card > img");
@@ -303,8 +303,8 @@
     };
 
     var dateElements = document.getElementsByClassName("date");
-    for (let i=0; i<elements.length; i++) {
-        elements[i].textContent = get_date();
+    for (let i=0; i<dateElements.length; i++) {
+        dateElements[i].textContent = get_date();
     }
 
     var mouse = { x:0, y:0 };
