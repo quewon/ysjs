@@ -431,9 +431,12 @@
 
             if (words[this.word]) {
                 context.fillStyle = this.color=="yellow" ? "black" : "white";
+                context.strokeStyle = this.color;
+                context.lineWidth = 5;
                 context.textBaseline = "middle";
                 context.textAlign = "center";
                 context.font = "30px sans-serif";
+                context.strokeText(this.word, this.x, this.y);
                 context.fillText(this.word, this.x, this.y);
             }
         }
@@ -484,7 +487,7 @@
         }
     }
 
-    window.onload = function() {
+    function init() {
         window.onresize();
 
         new AddWordParticle();
@@ -608,7 +611,7 @@
     }
 
     document.querySelector(".word-input").addEventListener("keypress", function(e) {
-        if (e.key == "Enter") {
+        if (e.code == "Enter") {
             add_word(this.parentElement);
         }
     })
@@ -624,6 +627,8 @@
         sessionStorage.setItem("brain", JSON.stringify(brain));
         location.href = "photobooth.html";
     }
+
+    init();
 
 </script>
 
