@@ -220,9 +220,9 @@
     var context = canvas.getContext("2d");
     context.scale(-1, 1);
 
-    var img_elements = photo_results.querySelectorAll("img");
-    for (let el of img_elements) {
-        el.onclick = function() {
+    var imgElements = photo_results.querySelectorAll("img");
+    for (let i=0; i<imgElements.length; i++) {
+        imgElements[i].onclick = function() {
             document.querySelector("img.selected").classList.remove("selected");
             this.classList.add("selected");
         }
@@ -287,23 +287,43 @@
         document.querySelector("main").classList.add("hidden");
         photo_results.classList.add("hidden");
 
-        var mediaFunction = navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
 
-        mediaFunction({ video: true })
-            .then((stream) => {
-                video.srcObject = stream;
+                    photobooth.classList.remove("hidden");
 
-                photobooth.classList.remove("hidden");
-
-                take_photo(() => {
                     take_photo(() => {
                         take_photo(() => {
-                            photobooth.classList.add("hidden");
-                            photo_results.classList.remove("hidden");
+                            take_photo(() => {
+                                photobooth.classList.add("hidden");
+                                photo_results.classList.remove("hidden");
+                            })
                         })
                     })
                 })
-            })
+        } else {
+            navigator.webkitGetUserMedia(
+                { video: true },
+                (stream) => {
+                    video.srcObject = stream;
+                    photobooth.classList.remove("hidden");
+                    video.onloadedmetadata = (e) => {
+                        video.play();
+
+                        take_photo(() => {
+                            take_photo(() => {
+                                take_photo(() => {
+                                    photobooth.classList.add("hidden");
+                                    photo_results.classList.remove("hidden");
+                                })
+                            })
+                        })
+                    };
+                }
+            )
+        }
     }
 
     function select_photo() {

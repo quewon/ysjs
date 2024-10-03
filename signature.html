@@ -182,13 +182,10 @@
     var mousedown = false;
 
     var canvas_rect;
-
-    window.onload = function() {
-        window.onresize();
-
-        context.strokeStyle = "black";
-        context.lineWidth = "4";
-    }
+    
+    window.onresize();
+    context.strokeStyle = "black";
+    context.lineWidth = "4";
 
     window.onresize = function() {
         canvas_rect = canvas.getBoundingClientRect();
