@@ -74,7 +74,7 @@
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100svh;
+            height: 100vh;
         }
         video {
             transform: rotateY(180deg);
@@ -304,8 +304,19 @@
                     })
                 })
         } else {
-            navigator.webkitGetUserMedia(
-                { video: true },
+            navigator.getUserMedia =
+                navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia;
+
+            navigator.getUserMedia(
+                {
+                    audio: false,
+                    video: {
+                        width: 720,
+                        height: 720,
+                    }
+                },
                 (stream) => {
                     video.srcObject = stream;
                     photobooth.classList.remove("hidden");

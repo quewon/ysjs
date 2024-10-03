@@ -141,10 +141,11 @@
 </body>
 
 <script>
-    
-    document.querySelectorAll(".name").forEach((el) => {
-        el.textContent = sessionStorage.getItem("name");
-    })
+
+    var nameElements = document.getElementsByClassName("name");
+    for (let i=0; i<nameElements.length; i++) {
+        nameElements[i].textContent = sessionStorage.getItem("name");
+    }
 
     var overlay = document.getElementById("overlay");
 
@@ -171,14 +172,15 @@
         reader.onloadend = () => {
             sessionStorage.setItem("picture", reader.result);
 
-            var image = document.querySelector(".image");
+            var image = document.getElementsByClassName("image")[0];
             image.src = reader.result;
             document.body.classList.add("uploaded");
             document.querySelector("h1").innerHTML = `<h1><b class="name">이름</b> 님의 프로필 사진</h1>`;
 
-            document.querySelectorAll(".name").forEach((el) => {
-                el.textContent = sessionStorage.getItem("name");
-            })
+            var nameElements = document.getElementsByClassName("name");
+            for (let i=0; i<nameElements.length; i++) {
+                nameElements[i].textContent = sessionStorage.getItem("name");
+            }
 
             overlay.classList.remove("drag");
         }
