@@ -182,10 +182,6 @@
     var mousedown = false;
 
     var canvas_rect;
-    
-    window.onresize();
-    context.strokeStyle = "black";
-    context.lineWidth = "4";
 
     window.onresize = function() {
         canvas_rect = canvas.getBoundingClientRect();
@@ -240,6 +236,12 @@
     function save_image() {
         sessionStorage.setItem("signature", canvas.toDataURL())
     }
+
+    // init
+
+    window.onresize();
+    context.strokeStyle = "black";
+    context.lineWidth = "4";
 
 </script>
 
