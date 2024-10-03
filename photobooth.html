@@ -203,10 +203,10 @@
 </body>
 
 <script>
-    
+
     var nameElements = document.getElementsByClassName("name");
-    for (let element of nameElements) {
-        element.textContent = sessionStorage.getItem("name");
+    for (let i=0; i<elements.length; i++) {
+        elements[i].textContent = sessionStorage.getItem("name");
     }
 
     var photobooth = document.querySelector(".photobooth");
@@ -214,7 +214,7 @@
     var timer = document.querySelector(".timer");
     var flash = document.querySelector(".flash");
 
-    var photo_results = document.querySelector(".photo-results");
+    var photo_results = document.getElementsByClassName("photo-results")[0];
     var photo_index = 0;
     var canvas = document.querySelector("canvas");
     var context = canvas.getContext("2d");
