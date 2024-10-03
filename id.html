@@ -226,58 +226,6 @@
     
 </body>
 
-<script src="https://api.google.com/js/api.js"></script>
-<script src="https://accounts.google.com/gsi/client"></script
-<script>
-    var CLIENT_ID = '136964988238-ai5sb2nko80c3dvo1onic54qokb8bgrq.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyC9VEbHqCejov3-JYO9WN_EGhOpJKw9lJw';
-    var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-    var SCOPES = 'https://www.googleapis.com/auth/drive';
-
-    let gapiInited = false;
-    let gisInited = false;
-
-    function gapiLoaded() {
-        gapi.load('client', initializeGapiClient);
-    }
-    
-    async function initializeGapiClient() {
-        await gapi.client.init({
-            apiKey: API_KEY,
-            discoveryDocs: DISCOVERY_DOCS,
-        });
-    
-        gapiInited = true;
-    }
-    
-    function gisLoaded() {
-        tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: SCOPES,
-            callback: ''
-        });
-    
-        gisInited = true;
-    }
-    
-    window.onload = handleAuthClick;
-
-    function handleAuthClick() {
-        tokenClient.callback = async (resp) => {
-            if (resp.error !== undefined) {
-                throw (resp);
-            }
-    
-            console.log('Sign-in Successful');    
-        };
-    
-        if (gapi.client.getToken() === null) {
-            tokenClient.requestAccessToken({ prompt: 'consent' });
-        } else {
-            tokenClient.requestAccessToken({ prompt: '' });
-        }
-    }
-</script>
 <script>
     var nameElements = document.getElementsByClassName("name");
     for (let i=0; i<nameElements.length; i++) {
@@ -391,42 +339,22 @@
     }
 
     function create_share_code() {
-        
-
-
-        // const accessToken = gapi.auth.getToken().access_token;
-
         var canvas = draw_id_to_canvas();
-        canvas.toBlob(
-            (blob) => {
-                var filename = sessionStorage.getItem("name") + " " + get_time() + ".jpg";
-                var file = new File([blob], filename, { type: "image/jpeg" });
-                
-                var form = new FormData();
-                form.append("metadata", new Blob([JSON.stringify({
-                    name: filename,
-                    mimeType: file.type
-                })], { type: 'application/json' }));
-                form.append("file", file);
+        var dataURL = canvas.toDataURL('image/jpeg', 1.0);
+        var filename = sessionStorage.getItem("name") + " " + get_time() + ".jpg";
 
-                // fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
-                //     method: "POST",
-                //     headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
-                //     body: form
-                // })
-                // .then((response) => {
-                //     return response.json()
-                // })
-                // .then((data) => {
-                //     console.log('File uploaded successfully:', data);
-                // })
-                // .catch((error) => {
-                //     console.error('Error uploading file:', error);
-                // });
-            },
-            "image/jpeg",
-            1
-        );
+        fetch("https://api.imgbb.com/1/upload", {
+            method: 'POST',
+            body: {
+                key: '82c636fb18681ff2a5a24a87d8796833',
+                image: dataURL.split(",")[1],
+                name: filename,
+                expiration: 600
+            }
+        })
+        .then((res) => {
+            console.log(res)
+        })
     }
 
     function draw_id_to_canvas() {
