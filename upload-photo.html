@@ -20,18 +20,19 @@
         }
 
         main {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            translate: -50% -50%;
             text-align: center;
 
             display: flex;
             flex-direction: column;
-            gap: 4rem;
+        }
+        main > * {
+            margin-bottom: 4rem !important;
         }
         .uploaded main {
             gap: 3rem;
+        }
+        .uploaded main > * {
+            margin-bottom: 4rem !important;
         }
 
         h1, h2 {
@@ -110,7 +111,7 @@
 
         <div class="right-column"></div>
 
-        <main>
+        <main class="center">
             <h1><b class="name">이름</b> 님</h1>
             <div class="card">
                 영구적으로 소장될 당신의 ID 카드에 들어갈<br>
