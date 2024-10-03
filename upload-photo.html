@@ -151,16 +151,21 @@
     var overlay = document.getElementById("overlay");
 
     document.body.addEventListener("dragenter", (e) => {
-        overlay.classList.add("drag");
+        if (e.dataTransfer) {
+            let files = e.dataTransfer.files;
+            if (files && files.length > 0) overlay.classList.add("drag");
+        }
         e.preventDefault();
     })
     document.body.addEventListener("dragleave", (e) => {
-        let file = e.dataTransfer.files[0];
         overlay.classList.remove("drag");
         e.preventDefault();
     })
     document.body.addEventListener("dragover", (e) => {
-        overlay.classList.add("drag");
+        if (e.dataTransfer) {
+            let files = e.dataTransfer.files;
+            if (files && files.length > 0) overlay.classList.add("drag");
+        }
         e.preventDefault();
     })
     document.body.addEventListener("drop", (e) => {
