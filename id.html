@@ -485,7 +485,7 @@
     }
 
     function get_time() {
-        return new Date().toLocaleTimeString().replaceAll(":","-");
+        return new Date().toLocaleTimeString().replace(":","-").replace(":","-");
     }
 
     //
