@@ -43,13 +43,17 @@
             position: absolute;
             bottom: 5rem;
         }
-
-        .qr-code {
-            display: block;
-            width: 10rem;
-            aspect-ratio: 1;
-            background: black;
-            right: 3rem;
+        .qr-code::after {
+            position: absolute;
+            content: "다운로드 (10분 뒤에 사라짐)";
+            bottom: -1rem;
+            left: 50%;
+            transform: translate(-50%, 100%);
+            white-space: nowrap;
+        }
+        .qr-code image {
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
         }
 
         .left-column .gradient {
@@ -169,23 +173,55 @@
         }
         .return-button {
             position: absolute;
-            top: 75%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 3rem;
+            right: 2rem;
             opacity: 0;
             pointer-events: none;
+        }
+        .outro h1 {
+            white-space: nowrap;
+            margin: 0;
+            font-weight: normal;
+            font-size: 1.25rem;
+            position: absolute;
+            top: 17%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 5s;
+            opacity: 0;
+        }
+        .center-card h1 {
+            opacity: 1;
         }
         .center-card .return-button {
             opacity: 1;
             pointer-events: all;
         }
         .return-button button {
+            font-size: 1.25rem;
             opacity: 0;
             font-family: var(--old-computer);
         }
         .center-card .return-button button {
             opacity: 1;
             transition: opacity 5s;
+        }
+
+        .qr-code {
+            display: block;
+            width: 8rem;
+            height: 8rem;
+            background: black;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 5s;
+        }
+        .center-card .qr-code {
+            opacity: 1;
         }
     </style>
 </head>
@@ -214,10 +250,13 @@
                         <canvas class="brain"></canvas>
                     </div>
                 </div>
+            </div>
 
-                <div class="qr-code"></div>
-
+            <div class="outro">
+                <h1><u class="name"></u>님의 디지털영생 ID 카드가 완성되었습니다.</h1>
                 <a class="return-button" href="index.html"><button>메인으로 돌아가기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
+                <a class="logo" href="index.html"><img src="res/logo.svg"></a>
+                <div class="qr-code"></div>
             </div>
         </main>
 
@@ -236,7 +275,10 @@
     
 </body>
 
+<script src="js/qrcode.min.js"></script>
 <script>
+    window.devicePixelRatio = 2;
+
     var nameElements = document.getElementsByClassName("name");
     for (let i=0; i<nameElements.length; i++) {
         nameElements[i].textContent = sessionStorage.getItem("name");
@@ -371,8 +413,6 @@
 
         //New Code
         return new Blob([ab], {type: mimeString});
-
-
     }
 
     function create_share_code() {
@@ -383,17 +423,24 @@
         var file = new File([blob], filename, { type: "image/jpeg" });
         var form = new FormData();
         form.append("image", file);
-        form.append("name", filename);
         form.append("expiration", 600);
         
-        // fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
-        //     method: 'POST',
-        //     headers: { "Content-Type": "multipart/form-data" },
-        //     body: form
-        // })
-        // .then((res) => {
-        //     console.log(res.url)
-        // })
+        fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
+            method: 'POST',
+            body: form
+        })
+        .then((response) => {
+            response.json()
+            .then((json) => {
+                var qr_element = document.getElementsByClassName("qr-code")[0];
+                var qrcode = new QRCode(qr_element, {
+                    width : qr_element.clientWidth,
+                    height : qr_element.clientHeight
+                });
+                qrcode.makeCode(json.data.url);
+                document.body.classList.add("center-card");
+            })
+        })
     }
 
     function draw_id_to_canvas() {
@@ -465,7 +512,7 @@
             picture_bounds.height
         );
 
-        context.font = "40px 'Helvetica'";
+        context.font = "80px 'Helvetica'";
         context.fillStyle = "rgb(110, 110, 110)";
         context.textAlign = "right";
         context.textBaseline = "middle";
@@ -526,12 +573,6 @@
     function get_time() {
         return new Date().toLocaleTimeString().replace(":","-").replace(":","-");
     }
-
-    //
-
-    setTimeout(() => {
-        document.body.classList.add("center-card");
-    }, 3000);
 </script>
 
 </html>
