@@ -82,6 +82,16 @@
             border: 1px solid black;
         }
 
+        .boxes > div:first-child {
+            transform: translate(0, -1.4em);
+        }
+        .boxes > div:nth-child(2) {
+            transform: rotate(15deg) translate(-.5em, -1em);
+        }
+        .boxes > div:last-child {
+            transform: rotate(-5deg) translate(0, -.7em);
+        }
+
         .id-card {
             position: relative;
             width: 90%;
@@ -188,7 +198,7 @@
                 <div class="gradient"></div>
                 <div class="boxes">
                     <div style="background: #080584; color: white; font-size: 2.25rem">축하합니다!</div>
-                    <div style="left: 1em; background: #A1B8FF; font-size: 1.75rem"><span class="name"></span>님의</div>
+                    <div style="left: 1em; background: white; font-size: 1.75rem"><span class="name"></span>님의</div>
                     <div style="background: #DAD7FE; font-size: 1.75rem">디지털 영생 업로드가 완료되었습니다.</div>
                 </div>
             </div>
@@ -338,25 +348,52 @@
         return a + alpha * ( b - a )
     }
 
+    function dataURItoBlob(dataURI) {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+        var byteString = atob(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to an ArrayBuffer
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        //Old Code
+        //write the ArrayBuffer to a blob, and you're done
+        //var bb = new BlobBuilder();
+        //bb.append(ab);
+        //return bb.getBlob(mimeString);
+
+        //New Code
+        return new Blob([ab], {type: mimeString});
+
+
+    }
+
     function create_share_code() {
         var filename = sessionStorage.getItem("name") + " " + get_time() + ".jpg";
         var canvas = draw_id_to_canvas();
-        canvas.toBlob((blob) => {
-            var file = new File([blob], filename, { type: "image/jpeg" });
-            var form = new FormData();
-            form.append("image", file);
-            form.append("name", filename);
-            form.append("expiration", 600);
-            
-            fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
-                method: 'POST',
-                headers: { "Content-Type": "multipart/form-data" },
-                body: form
-            })
-            .then((res) => {
-                console.log(res.url)
-            })
-        }, 'image/jpeg', 1)
+        var blob = dataURItoBlob(canvas.toDataURL('image/jpeg', 1));
+
+        var file = new File([blob], filename, { type: "image/jpeg" });
+        var form = new FormData();
+        form.append("image", file);
+        form.append("name", filename);
+        form.append("expiration", 600);
+        
+        // fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
+        //     method: 'POST',
+        //     headers: { "Content-Type": "multipart/form-data" },
+        //     body: form
+        // })
+        // .then((res) => {
+        //     console.log(res.url)
+        // })
     }
 
     function draw_id_to_canvas() {

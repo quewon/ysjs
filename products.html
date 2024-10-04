@@ -94,7 +94,17 @@
             position: absolute;
             bottom: var(--floor);
             left: 50%;
-            transform: translate(-50%, 0);
+            transform: rotate(-90deg) translate(0, 30%);
+            transform-origin: 0 100%;;
+        }
+        .boxes > *:first-child {
+            transform: translate(0, -1em);
+        }
+        .boxes > *:nth-child(2) {
+            transform: rotate(5deg) translate(.1em, -.5em);
+        }
+        .boxes > *:nth-child(4) {
+            transform: rotate(75deg) translate(3.5em, 3.5em);
         }
 
         .boxes div {
