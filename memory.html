@@ -83,7 +83,7 @@
         설정이 완료되었다면 <b>[편집 완료]</b>를 눌러<br>
         다음 단계로 넘어가시길 바랍니다.<br>
         <br>
-        <button onclick="this.parentElement.close()">편집하기</button>
+        <button onclick="this.parentElement.close(); document.querySelector('dialog#add-word').showModal();">편집하기</button>
     </dialog>
 
     <dialog id="info">
@@ -494,12 +494,12 @@
 
         new AddWordParticle();
 
-        var examples = ["낭만", "긍정", "모험", "성취", "헌신", "균형", "도전", "배움", "연대", "고독", "갈망", "극복", "집념", "추억", "평화"];
-        shuffleArray(examples);
-        for (let i=0; i<5; i++) {
-            new Word(examples[i]);
-        }
-        words[examples[0]].select();
+        // var examples = ["낭만", "긍정", "모험", "성취", "헌신", "균형", "도전", "배움", "연대", "고독", "갈망", "극복", "집념", "추억", "평화"];
+        // shuffleArray(examples);
+        // for (let i=0; i<5; i++) {
+        //     new Word(examples[i]);
+        // }
+        // words[examples[0]].select();
 
         draw();
     }
@@ -560,10 +560,13 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         context.lineWidth = 2;
-        context.strokeStyle = "lightgray";
-        context.beginPath();
-        context.arc(mouse.x, mouse.y, brush_radius, 0, Math.PI*2);
-        context.stroke();
+        
+        if (Object.keys(words).length > 0) {
+            context.strokeStyle = "lightgray";
+            context.beginPath();
+            context.arc(mouse.x, mouse.y, brush_radius, 0, Math.PI*2);
+            context.stroke();
+        }
 
         draw_particles();
 

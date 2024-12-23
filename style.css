@@ -170,8 +170,3 @@ a.toggleable::before {
 a.toggleable.selected::before {
     content: url("res/checked_box.svg");
 }
-
-dialog {
-    top: 50%;
-    transform: translate(0, -50%);
-}

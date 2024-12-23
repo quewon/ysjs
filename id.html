@@ -11,7 +11,7 @@
             --floor: 20rem;
         }
 
-        main {
+        .page {
             display: flex;
             height: 100%;
         }
@@ -39,14 +39,14 @@
             padding-bottom: var(--floor);
         }
 
-        .qr-code, .signature {
+        .qr-code, .signature, .outro > img {
             position: absolute;
             bottom: 5rem;
         }
         .qr-code::after {
             position: absolute;
-            content: "다운로드 (10분 뒤에 사라짐)";
-            bottom: -1rem;
+            content: "SNS 공유";
+            bottom: -0.7rem;
             left: 50%;
             transform: translate(-50%, 100%);
             white-space: nowrap;
@@ -54,6 +54,13 @@
         .qr-code image {
             image-rendering: crisp-edges;
             image-rendering: pixelated;
+        }
+
+        .outro > img {
+            width: 3rem;
+            bottom: 5rem;
+            left: 50%;
+            transform: translate(-50%, 0);
         }
 
         .left-column .gradient {
@@ -162,7 +169,7 @@
         }
 
         .center-card .left-column {
-            transition: width 5s, opacity 5s;
+            transition: width 5s, opacity 5s, padding-bottom 5s;
             width: 0;
             opacity: 0;
         }
@@ -170,9 +177,13 @@
             width: 100%;
             transition: border-color 7s, width 5s;
             border-color: transparent;
+            padding-bottom: 23rem;
+        }
+        .logo {
+            position: fixed;
         }
         .return-button {
-            position: absolute;
+            position: fixed;
             top: 3rem;
             right: 2rem;
             opacity: 0;
@@ -209,11 +220,11 @@
 
         .qr-code {
             display: block;
-            width: 8rem;
-            height: 8rem;
+            width: 7rem;
+            height: 7rem;
             background: black;
             position: absolute;
-            bottom: 10%;
+            bottom: 11rem;
             left: 50%;
             transform: translate(-50%, -50%);
             opacity: 0;
@@ -223,13 +234,114 @@
         .center-card .qr-code {
             opacity: 1;
         }
+
+        .container {
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
+        .container .page {
+            scroll-snap-align: center;
+        }
+
+        .archive-label {
+            position: absolute;
+            top: 3rem;
+            text-align: center;
+            width: 100%;
+            font-size: 1.25rem;
+            line-height: 2em;
+        }
+        .archive-buttons {
+            position: absolute;
+            top: 12rem;
+            left: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .archive-buttons button {
+            padding: .4em 2.5em;
+            box-shadow: 0 3px 3px rgba(0, 0, 0, .25);
+            font-size: 1.1165rem;
+        }
+        .archive-buttons button.selected {
+            background: #597EEE;
+            color: white;
+        }
+        .archive-buttons button:not(.selected):hover {
+            background: white;
+        }
+        .archive-display {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            pointer-events: none;
+        }
+        .archive-file {
+            pointer-events: auto;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            top: 50%;
+            left: 50%;
+            gap: 1.2em;
+            transform: translate(-50%, -50%);
+        }
+        .archive-file div {
+            cursor: pointer;
+            width: 11rem;
+            height: 9rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 7px solid rgba(236, 236, 236, .43);
+            box-shadow: 1px 4px 4px 1px rgba(0, 0, 0, .25);
+        }
+        .archive-file div img {
+            width: 13rem;
+            transform: rotate(3deg);
+        }
+        .archive-file span {
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            width: 100%;
+            font-size: 1.066rem;
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, .5);
+        }
+        dialog {
+            border: none;
+            background: transparent;
+            width: fit-content;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        dialog img {
+            height: 70vh;
+            background: white;
+        }
+        dialog div {
+            margin-top: .5rem;
+            background: white;
+            color: black;
+            width: fit-content;
+            padding: .5rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <main>
+        <div class="page">
             <div class="left-column">
                 <div class="gradient"></div>
                 <div class="boxes">
@@ -257,8 +369,24 @@
                 <a class="return-button" href="index.html"><button>메인으로 돌아가기 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
                 <a class="logo" href="index.html"><img src="res/logo.svg"></a>
                 <div class="qr-code"></div>
+                <img src="res/scroll_prompt.svg">
             </div>
-        </main>
+        </div>
+
+        <div class="page">
+            <p class="archive-label">
+                <u class="name">관람자</u>님의 디지털영생 ID 카드가 <br>
+                아카이빙 페이지가 추가 되었습니다.
+            </p>
+            <div class="archive-buttons">
+                <button onclick="select_button()">전체</button>
+                <button onclick="select_button(this.textContent)"> </button>
+                <button onclick="select_button(this.textContent)"> </button>
+                <button onclick="select_button(this.textContent)"> </button>
+            </div>
+            <div class="archive-display">
+            </div>
+        </div>
 
         <footer>
             <span></span>
@@ -272,12 +400,22 @@
             <span></span>
         </footer>
     </div>
+
+    <dialog id="id-dialog">
+        <img src="">
+        <div>.zip</div>
+    </dialog>
     
 </body>
 
 <script src="js/qrcode.min.js"></script>
 <script>
     window.devicePixelRatio = 2;
+
+    const archive_buttons = document.querySelector(".archive-buttons");
+    const archive_display = document.querySelector(".archive-display");
+    const id_dialog = document.getElementById("id-dialog");
+    var archived_ids;
 
     var nameElements = document.getElementsByClassName("name");
     for (let i=0; i<nameElements.length; i++) {
@@ -391,56 +529,77 @@
     }
 
     function dataURItoBlob(dataURI) {
-        // convert base64 to raw binary data held in a string
-        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
         var byteString = atob(dataURI.split(',')[1]);
-
-        // separate out the mime component
         var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
-        // write the bytes of the string to an ArrayBuffer
         var ab = new ArrayBuffer(byteString.length);
         var ia = new Uint8Array(ab);
         for (var i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
         }
-
-        //Old Code
-        //write the ArrayBuffer to a blob, and you're done
-        //var bb = new BlobBuilder();
-        //bb.append(ab);
-        //return bb.getBlob(mimeString);
-
-        //New Code
+        
         return new Blob([ab], {type: mimeString});
     }
 
     function create_share_code() {
-        var filename = sessionStorage.getItem("name") + " " + get_time() + ".jpg";
+        var name = sessionStorage.getItem("name");
+        var filename = name + " " + get_time() + ".jpg";
         var canvas = draw_id_to_canvas();
-        var blob = dataURItoBlob(canvas.toDataURL('image/jpeg', 1));
+        var datauri = canvas.toDataURL('image/jpeg', 1);
+        var blob = dataURItoBlob(datauri);
 
         var file = new File([blob], filename, { type: "image/jpeg" });
         var form = new FormData();
         form.append("image", file);
-        form.append("expiration", 600);
         
-        fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
-            method: 'POST',
-            body: form
-        })
-        .then((response) => {
-            response.json()
-            .then((json) => {
+        // fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
+        //     method: 'POST',
+        //     body: form
+        // })
+        // .then((response) => {
+        //     response.json()
+        //     .then((json) => {
+                // var url = json.data.url;
+                var url = 'https://i.ibb.co/F8Sf7WP/9-23-54-PM.jpg';
+
                 var qr_element = document.getElementsByClassName("qr-code")[0];
                 var qrcode = new QRCode(qr_element, {
                     width : qr_element.clientWidth,
                     height : qr_element.clientHeight
                 });
-                qrcode.makeCode(json.data.url);
+                qrcode.makeCode(url);
                 document.body.classList.add("center-card");
-            })
-        })
+
+                archived_ids = localStorage.getItem("id-cards");
+                if (!archived_ids) {
+                    archived_ids = [];
+                } else {
+                    archived_ids = JSON.parse(archived_ids);
+                }
+                var brain = JSON.parse(sessionStorage.getItem("brain"));
+                for (let keyword in brain) {
+                    brain[keyword] = brain[keyword].particles
+                }
+
+                let id_is_duplicate = false;
+                for (let id of archived_ids) {
+                    if (id.image == url) {
+                        id_is_duplicate = true;
+                        break;
+                    }
+                }
+                if (!id_is_duplicate) {
+                    archived_ids.push({
+                        image: url,
+                        name: name,
+                        brain: brain
+                    });
+                    localStorage.setItem("id-cards", JSON.stringify(archived_ids));
+                }
+
+                init_archive();
+        //     })
+        // })
     }
 
     function draw_id_to_canvas() {
@@ -473,16 +632,16 @@
         );
         bg_offset.x = (bg_bounds.width - (bg.naturalWidth * bg_scale)) / 2;
         bg_offset.y = (bg_bounds.height - (bg.naturalHeight * bg_scale)) / 2;
-        context.drawImage(
-            bg,
-            -bg_offset.x/2, -bg_offset.y/2,
-            bg.naturalWidth + bg_offset.x,
-            bg.naturalHeight + bg_offset.y,
-            bg_bounds.x,
-            bg_bounds.y,
-            bg_bounds.width,
-            bg_bounds.height
-        );
+        // context.drawImage(
+        //     bg,
+        //     -bg_offset.x/2, -bg_offset.y/2,
+        //     bg.naturalWidth + bg_offset.x,
+        //     bg.naturalHeight + bg_offset.y,
+        //     bg_bounds.x,
+        //     bg_bounds.y,
+        //     bg_bounds.width,
+        //     bg_bounds.height
+        // );
 
         context.shadowColor = "rgba(0, 0, 0, .25)";
         context.shadowBlur = 60;
@@ -573,6 +732,117 @@
     function get_time() {
         return new Date().toLocaleTimeString().replace(":","-").replace(":","-");
     }
+
+    // archive
+
+    function init_archive() {
+        var all_keywords = {};
+        var keyword_count = 0;
+        for (let id of archived_ids) {
+            for (let keyword in id.brain) {
+                if (!all_keywords[keyword]) {
+                    all_keywords[keyword] = 0;
+                    keyword_count++;
+                }
+                all_keywords[keyword] += Number(id.brain[keyword]);
+            }
+        }
+
+        const get_largest_keywords = object => {
+            return Object.keys(object).filter(x => {
+                return object[x] == Math.max.apply(null, Object.values(object));
+            });
+        };
+
+        var largest_keywords = get_largest_keywords(all_keywords);
+        while (largest_keywords.length < 3 && keyword_count >= 3) {
+            for (let keyword of largest_keywords) {
+                delete all_keywords[keyword];
+            }
+            largest_keywords = largest_keywords.concat(get_largest_keywords(all_keywords));
+        }
+
+        if (largest_keywords.length > 3) {
+            shuffle_array(largest_keywords);
+            largest_keywords = largest_keywords.slice(0, 2);
+        }
+
+        for (let i=2; i>=0; i--) {
+            if (largest_keywords[i]) {
+                archive_buttons.children[i+1].textContent = largest_keywords[i];
+            } else {
+                archive_buttons.children[i+1].remove();
+            }
+        }
+        archive_buttons.children[0].click();
+    }
+
+    function shuffle_array(array) {
+        let currentIndex = array.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+
+            // Pick a remaining element...
+            let randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = 
+                [array[randomIndex], array[currentIndex]];
+        }
+    }
+
+    function select_button(keyword) {
+        while (archive_display.lastElementChild) {
+            archive_display.lastElementChild.remove();
+        }
+        for (let i=0; i<archive_buttons.children.length; i++) {
+            let button = archive_buttons.children[i];
+            button.classList.remove("selected");
+            if (keyword) {
+                if (button.textContent == keyword) {
+                    button.classList.add("selected");
+                }
+            } else if (i == 0) {
+                button.classList.add("selected");
+            }
+        }
+
+        var selected_ids = [];
+
+        for (let id of archived_ids) {
+            if (keyword) {
+                if (id.brain[keyword]) {
+                    selected_ids.push(id);
+                }
+            } else {
+                selected_ids.push(id);
+            }
+        }
+
+        for (let id of selected_ids) {
+            create_archive_file(id.name, id.image);
+        }
+    }
+
+    function create_archive_file(name, url) {
+        var file = document.createElement("div");
+        file.className = "archive-file";
+        file.innerHTML = `<div><img src="${url}"></div><span>${name}.zip</span>`;
+        file.style.top = (25 + Math.random() * 55) + "%";
+        file.style.left = (30 + Math.random() * 55) + "%";
+        file.style.scale = Math.random() * .3 + .7;
+        file.querySelector("img").style.transform = "rotate("+ (-15 + Math.random() * 30) +"deg)";
+        file.onclick = () => {
+            id_dialog.querySelector("img").src = file.querySelector("img").src;
+            id_dialog.querySelector("div").textContent = file.querySelector("span").textContent;
+            id_dialog.showModal();
+        }
+        archive_display.appendChild(file);
+    }
+
+    document.body.onmouseup = () => { id_dialog.close() };
 </script>
 
 </html>
