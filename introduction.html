@@ -84,13 +84,15 @@
         @media screen and (max-width: 500px) {
             .scroll-prompt {
                 margin-left: 12rem;
+                margin-top: 4rem;
             }
 
             .oval {
-                left: 3em;
+                left: calc(50% + 1em);
+                transform: translate(-50%, 0);
             }
             .oval > img {
-                width: 15rem;
+                width: 47vw;
             }
             .oval .company-signature {
                 margin-left: unset;
@@ -107,6 +109,19 @@
                 animation: slide-out 0 ease-in-out;
             }
             @keyframes slide-out {
+            }
+
+            .right-column p {
+                font-size: 1.1rem;
+                padding-left: 6em;
+            }
+            .right-column p:last-child {
+                padding-left: unset;
+            }
+
+            .company-signature img {
+                right: unset;
+                left: 7em
             }
         }
 

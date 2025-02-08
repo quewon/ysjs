@@ -53,8 +53,7 @@ footer {
 @media screen and (max-width: 500px) {
     footer {
         word-break: keep-all;
-        gap: 1em;
-        align-items: center;
+        display: block;
     }
     footer span:first-child,
     footer span:nth-last-child(3),
@@ -114,7 +113,15 @@ header .logomin {
         margin-left: 2rem;
     }
     header img {
-        width: 7em;
+        width: 5em;
+    }
+
+    .logo {
+        top: 1em;
+        left: 2em;
+    }
+    .logo img {
+        width: 3em;
     }
 }
 
