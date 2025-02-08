@@ -108,13 +108,31 @@
         .contract-button.changed {
             opacity: 1;
         }
+
+        @media screen and (max-width: 700px) {
+            .container {
+                height: unset;
+                overflow: unset;
+            }
+            .cells {
+                display: flex;
+                flex-direction: column;
+                height: 50dvh;
+                overflow-y: scroll;
+            }
+            .cells div {
+                border-right: none;
+                border-bottom: 1px solid black;
+            }
+            .cells p {
+                pointer-events: none;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-
-        <div class="right-column"></div>
 
         <main class="center">
             <div class="contract">

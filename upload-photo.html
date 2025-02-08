@@ -116,6 +116,42 @@
         dialog button {
             font-size: inherit;
         }
+
+        .mobile {
+            display: none;
+        }
+
+        @media screen and (max-width: 500px) {
+            .not-mobile {
+                display: none;
+            }
+            .mobile {
+                display: block;
+            }
+            .card, h2 {
+                white-space: wrap;
+                word-break: keep-all;
+            }
+            .card br {
+                display: none;
+            }
+            .center {
+                width: 90vw;
+            }
+            main > * {
+                margin-bottom: 2rem !important;
+            }
+
+            .done-button button {
+                width: unset;
+            }
+            .done-button {
+                bottom: 7rem;
+                right: unset;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
         
     </style>
 </head>
@@ -135,8 +171,10 @@
                 영구적으로 소장될 당신의 ID 카드에 들어갈<br>
                 프로필 사진을 찍어드립니다.
             </div>
-            <img class="image" src="res/camera.svg">
-            <h2>포토부스(Photo Booth) 앱에서 촬영한<br>사진 파일을 드래그하여 업로드하세요. <button onclick="document.querySelector('dialog#help').showModal()" class="question-button">?</button></h2>
+            <a onclick="this.nextElementSibling.click()"><img class="image" src="res/camera.svg"></a>
+                <input type="file" accept="capture=camera,image/*" style="display: none" onchange="readfile(this.files[0])"/>
+            <h2 class="not-mobile">포토부스(Photo Booth) 앱에서 촬영한<br>사진 파일을 드래그하여 업로드하세요. <button onclick="document.querySelector('dialog#help').showModal()" class="question-button">?</button></h2>
+            <h2 class="mobile">사진 앨범에서 마음에 드는 프로필 사진을 선택하세요.</h2>
         </main>
 
         <a class="done-button" href="contract.html"><button>업로드 완료 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
@@ -210,6 +248,12 @@
         e.preventDefault();
         // e.stopPropagation();
 
+        readfile(file);
+    })
+
+    function readfile(file) {
+        console.log(file);
+
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
@@ -227,7 +271,7 @@
 
             overlay.classList.remove("drag");
         }
-    })
+    }
     
 </script>
 

@@ -42,6 +42,30 @@
             font-size: inherit;
             font-family: inherit;
         }
+
+        .mobile {
+            display: none;
+        }
+
+        @media screen and (max-width: 500px) {
+            dialog {
+                width: 70%;
+            }
+            .buttons {
+                bottom: 8rem;
+                text-align: center;
+            }
+            .mobile {
+                margin-bottom: .5em;
+                display: block;
+            }
+            .mobile button.selected {
+                border: 2px solid greenyellow;
+            }
+            .tutorial-button {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -69,7 +93,11 @@
         </footer>
 
         <div class="buttons">
-            <button onclick="document.getElementById('info').showModal()">?</button>
+            <div class="mobile">
+                <button class="selected" onclick="ERASEMODE=false;this.classList.add('selected');this.nextElementSibling.classList.remove('selected')">입자 생성</button>
+                <button onclick="ERASEMODE=true;this.classList.add('selected');this.previousElementSibling.classList.remove('selected')">입자 삭제</button>
+            </div>
+            <button class="tutorial-button" onclick="document.getElementById('info').showModal()">?</button>
             <button onclick="document.getElementById('confirm').showModal()">편집 완료</button>
         </div>
 
@@ -521,6 +549,7 @@
         brush_radius = circle_radius / 5;
     }
 
+    var ERASEMODE = false;
     var mouse = {
         down: false,
         up: false,
@@ -534,7 +563,11 @@
     });
 
     canvas.addEventListener("mousedown", (e) => {
-        mouse.down = true;
+        if (ERASEMODE) {
+            mouse.right = true;
+        } else {
+            mouse.down = true;
+        }
     });
 
     canvas.addEventListener("mouseup", (e) => {

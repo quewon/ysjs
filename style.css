@@ -50,6 +50,19 @@ footer {
     border-top: 1px solid black;
 }
 
+@media screen and (max-width: 500px) {
+    footer {
+        word-break: keep-all;
+        gap: 1em;
+        align-items: center;
+    }
+    footer span:first-child,
+    footer span:nth-last-child(3),
+    footer span:nth-last-child(2) {
+        display: none;
+    }
+}
+
 button {
     background: white;
     border: 1.5px solid black;
@@ -95,6 +108,16 @@ header .logomin {
     width: 5rem;
 }
 
+@media screen and (max-width: 500px) {
+    header {
+        margin-top: 1rem;
+        margin-left: 2rem;
+    }
+    header img {
+        width: 7em;
+    }
+}
+
 /* subpages */
 
 .cmss {
@@ -136,6 +159,20 @@ header .logomin {
 .right-column p {
     font-size: 1.5rem;
     line-height: 1.75em;
+}
+
+@media screen and (max-width: 500px) {
+    .right-column {
+        border-right: none;
+        right: 0;
+        padding: 4em 3em;
+        padding-left: 9em;
+        word-break: keep-all;
+    }
+    .right-column p {
+        font-size: 1.4rem;
+        line-height: 1.5em;
+    }
 }
 
 .company-signature {

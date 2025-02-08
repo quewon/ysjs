@@ -81,6 +81,35 @@
             text-align: center;
         }
 
+        @media screen and (max-width: 500px) {
+            .scroll-prompt {
+                margin-left: 12rem;
+            }
+
+            .oval {
+                left: 3em;
+            }
+            .oval > img {
+                width: 15rem;
+            }
+            .oval .company-signature {
+                margin-left: unset;
+            }
+
+            .download {
+                left: unset;
+                right: 2em;
+                bottom: 9.5rem;
+            }
+
+            body.fadeout .right-column {
+                right: 0;
+                animation: slide-out 0 ease-in-out;
+            }
+            @keyframes slide-out {
+            }
+        }
+
         .container {
             height: 100vh;
             overflow-x: hidden;
