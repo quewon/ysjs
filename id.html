@@ -443,6 +443,15 @@
                 opacity: 1;
                 pointer-events: all;
             }
+
+            .preview-canvas {
+                position: absolute;
+                top: 50% !important;
+                left: 50% !important;
+                width: 50vw !important;
+                height: 50vw !important;
+                transform: translate(-50%, -50%);
+            }
         }
     </style>
 </head>
@@ -652,23 +661,14 @@
         return a + alpha * ( b - a )
     }
 
-    function dataURItoBlob(dataURI) {
-        var byteString = atob(dataURI.split(',')[1]);
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        
-        return new Blob([ab], {type: mimeString});
-    }
-
     function create_share_code() {
         var name = sessionStorage.getItem("name");
         var filename = name + " " + get_time() + ".jpg";
         var canvas = draw_id_to_canvas();
+
+        document.body.appendChild(canvas);
+        canvas.classList.add("preview-canvas");
+
         var blob = canvas.toBlob(
             blob => {
                 if (window.innerWidth > 500) {
