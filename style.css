@@ -90,6 +90,7 @@ button:hover {
     position: absolute;
     top: 1.7em;
     left: 2.5em;
+    z-index: 100;
 }
 .logo img {
     width: 4em;
