@@ -362,10 +362,9 @@
             }
             .center-card .right-column {
                 padding: 13em 3em;
-                padding-bottom: 44svh;
             }
             .qr-code {
-                bottom: 5rem;
+                display: none;
             }
             .outro h1 {
                 width: 80vw;
@@ -386,13 +385,13 @@
                 transform: translate(-50%, 14%) scale(0.7);
             }
             .outro > img {
-                bottom: 5rem;
-                left: unset;
-                transform: unset;
-                right: 1em;
+                bottom: 6rem;
             }
             .return-button {
                 top: 2rem;
+            }
+            .id-card {
+                top: 2em;
             }
         }
     </style>
@@ -612,53 +611,86 @@
         var form = new FormData();
         form.append("image", file);
         
-        fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
-            method: 'POST',
-            body: form
-        })
-        .then((response) => {
-            response.json()
-            .then((json) => {
-                var url = json.data.url;
-
-                var qr_element = document.getElementsByClassName("qr-code")[0];
-                var qrcode = new QRCode(qr_element, {
-                    width : qr_element.clientWidth,
-                    height : qr_element.clientHeight
-                });
-                qrcode.makeCode(url);
-                document.body.classList.add("center-card");
-
-                archived_ids = localStorage.getItem("id-cards");
-                if (!archived_ids) {
-                    archived_ids = [];
-                } else {
-                    archived_ids = JSON.parse(archived_ids);
-                }
-                var brain = JSON.parse(sessionStorage.getItem("brain"));
-                for (let keyword in brain) {
-                    brain[keyword] = brain[keyword].particles
-                }
-
-                let id_is_duplicate = false;
-                for (let id of archived_ids) {
-                    if (id.image == url) {
-                        id_is_duplicate = true;
-                        break;
-                    }
-                }
-                if (!id_is_duplicate) {
-                    archived_ids.push({
-                        image: url,
-                        name: name,
-                        brain: brain
-                    });
-                    localStorage.setItem("id-cards", JSON.stringify(archived_ids));
-                }
-
-                init_archive();
+        if (window.innerWidth > 500) {
+            fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
+                method: 'POST',
+                body: form
             })
-        })
+            .then((response) => {
+                response.json()
+                .then((json) => {
+                    var url = json.data.url;
+
+                    var qr_element = document.getElementsByClassName("qr-code")[0];
+                    var qrcode = new QRCode(qr_element, {
+                        width : qr_element.clientWidth,
+                        height : qr_element.clientHeight
+                    });
+                    qrcode.makeCode(url);
+                    document.body.classList.add("center-card");
+
+                    archived_ids = localStorage.getItem("id-cards");
+                    if (!archived_ids) {
+                        archived_ids = [];
+                    } else {
+                        archived_ids = JSON.parse(archived_ids);
+                    }
+                    var brain = JSON.parse(sessionStorage.getItem("brain"));
+                    for (let keyword in brain) {
+                        brain[keyword] = brain[keyword].particles
+                    }
+
+                    let id_is_duplicate = false;
+                    for (let id of archived_ids) {
+                        if (id.image == url) {
+                            id_is_duplicate = true;
+                            break;
+                        }
+                    }
+                    if (!id_is_duplicate) {
+                        archived_ids.push({
+                            image: url,
+                            name: name,
+                            brain: brain
+                        });
+                        localStorage.setItem("id-cards", JSON.stringify(archived_ids));
+                    }
+
+                    init_archive();
+                })
+            })
+        } else {
+            document.body.classList.add("center-card");
+
+            archived_ids = localStorage.getItem("id-cards");
+            if (!archived_ids) {
+                archived_ids = [];
+            } else {
+                archived_ids = JSON.parse(archived_ids);
+            }
+            var brain = JSON.parse(sessionStorage.getItem("brain"));
+            for (let keyword in brain) {
+                brain[keyword] = brain[keyword].particles
+            }
+
+            let id_is_duplicate = false;
+            for (let id of archived_ids) {
+                if (id.image == url) {
+                    id_is_duplicate = true;
+                    break;
+                }
+            }
+            if (!id_is_duplicate) {
+                archived_ids.push({
+                    image: url,
+                    name: name,
+                    brain: brain
+                });
+                localStorage.setItem("id-cards", JSON.stringify(archived_ids));
+            }
+
+            init_archive();
+        }
     }
 
     function draw_id_to_canvas() {

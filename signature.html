@@ -202,6 +202,15 @@
         context.scale(window.devicePixelRatio, window.devicePixelRatio);
     }
 
+    document.addEventListener("touchstart", e => {
+        context.beginPath();
+        context.moveTo(
+            e.touches[0].pageX - canvas_rect.left,
+            e.touches[0].pageY - canvas_rect.top
+        );
+        mousedown = true;
+    })
+
     document.addEventListener("mousedown", (e) => {
         context.beginPath();
         context.moveTo(
@@ -209,6 +218,11 @@
             e.pageY - canvas_rect.top
         );
         mousedown = true;
+    })
+
+    document.addEventListener("touchend", () => {
+        context.beginPath();
+        mousedown = false;
     })
 
     document.addEventListener("mouseup", () => {
@@ -219,6 +233,22 @@
         context.beginPath();
         mousedown = false;
     });
+
+    document.addEventListener("touchmove", e => {
+        if (mousedown == true) {
+            context.lineTo(
+                e.touches[0].pageX - canvas_rect.left,
+                e.touches[0].pageY - canvas_rect.top
+            )
+            context.stroke();
+            context.closePath();
+            context.moveTo(
+                e.touches[0].pageX - canvas_rect.left,
+                e.touches[0].pageY - canvas_rect.top
+            )
+            enable_anchor();
+        }
+    })
 
     document.addEventListener("mousemove", (e) => {
         if (mousedown == true) {

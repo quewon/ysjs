@@ -54,9 +54,9 @@
                 word-break: keep-all;
             }
             .buttons {
-                bottom: 8rem;
                 text-align: center;
                 width: 100vw;
+                top: 30rem;
             }
             .mobile {
                 margin-bottom: .5em;
@@ -560,17 +560,32 @@
         y: 0
     }
 
+    canvas.addEventListener("touchmove", e => {
+        mouse.x = e.touches[0].pageX * window.devicePixelRatio;
+        mouse.y = e.touches[0].pageY * window.devicePixelRatio;
+    })
+
+    canvas.addEventListener("touchstart", e => {
+        if (ERASEMODE) {
+            mouse.right = true;
+        } else {
+            mouse.down = true;
+        }
+    })
+
+    canvas.addEventListener("touchend", e => {
+        mouse.down = false;
+        mouse.right = false;
+        mouse.up = true;
+    })
+
     canvas.addEventListener("mousemove", (e) => {
         mouse.x = e.pageX * window.devicePixelRatio;
         mouse.y = e.pageY * window.devicePixelRatio;
     });
 
     canvas.addEventListener("mousedown", (e) => {
-        if (ERASEMODE) {
-            mouse.right = true;
-        } else {
-            mouse.down = true;
-        }
+        mouse.down = true;
     });
 
     canvas.addEventListener("mouseup", (e) => {
