@@ -170,12 +170,12 @@
             <h1><b class="name">이름</b> 님</h1>
             <div class="card">
                 영구적으로 소장될 당신의 ID 카드에 들어갈<br>
-                프로필 사진을 찍어드립니다.
+                프로필 사진을 선택하세요.
             </div>
             <a onclick="this.nextElementSibling.click()"><img class="image" src="res/camera.svg"></a>
                 <input type="file" accept="capture=camera,image/*" style="display: none" onchange="readfile(this.files[0])"/>
             <h2 class="not-mobile">포토부스(Photo Booth) 앱에서 촬영한<br>사진 파일을 드래그하여 업로드하세요. <button onclick="document.querySelector('dialog#help').showModal()" class="question-button">?</button></h2>
-            <h2 class="mobile">사진 앨범에서 마음에 드는 프로필 사진을 선택하세요.</h2>
+            <h2 class="mobile">사진 앨범에서 마음에 드는 프로필 사진을 업로드하세요.</h2>
         </main>
 
         <a class="done-button" href="contract"><button>업로드 완료 <img class="icon" src="res/arrowright.svg" alt="→"></button></a>
