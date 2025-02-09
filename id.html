@@ -669,67 +669,70 @@
         var name = sessionStorage.getItem("name");
         var filename = name + " " + get_time() + ".jpg";
         var canvas = draw_id_to_canvas();
-        var datauri = canvas.toDataURL('image/jpeg', 1);
-        var blob = dataURItoBlob(datauri);
+        var blob = canvas.toBlob(
+            blob => {
+                if (window.innerWidth > 500) {
+                    var file = new File([blob], filename, { type: "image/jpeg" });
+                    var form = new FormData();
+                    form.append("image", file);
 
-        var file = new File([blob], filename, { type: "image/jpeg" });
-        var form = new FormData();
-        form.append("image", file);
-        
-        if (window.innerWidth > 500) {
-            fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
-                method: 'POST',
-                body: form
-            })
-            .then((response) => {
-                response.json()
-                .then((json) => {
-                    var url = json.data.url;
+                    fetch("https://api.imgbb.com/1/upload?key=82c636fb18681ff2a5a24a87d8796833", {
+                        method: 'POST',
+                        body: form
+                    })
+                    .then((response) => {
+                        response.json()
+                        .then((json) => {
+                            var url = json.data.url;
 
-                    var qr_element = document.getElementsByClassName("qr-code")[0];
-                    var qrcode = new QRCode(qr_element, {
-                        width : qr_element.clientWidth,
-                        height : qr_element.clientHeight
-                    });
-                    qrcode.makeCode(url);
-                    document.body.classList.add("center-card");
+                            var qr_element = document.getElementsByClassName("qr-code")[0];
+                            var qrcode = new QRCode(qr_element, {
+                                width : qr_element.clientWidth,
+                                height : qr_element.clientHeight
+                            });
+                            qrcode.makeCode(url);
+                            document.body.classList.add("center-card");
 
-                    archived_ids = localStorage.getItem("id-cards");
-                    if (!archived_ids) {
-                        archived_ids = [];
-                    } else {
-                        archived_ids = JSON.parse(archived_ids);
-                    }
-                    var brain = JSON.parse(sessionStorage.getItem("brain"));
-                    for (let keyword in brain) {
-                        brain[keyword] = brain[keyword].particles
-                    }
+                            archived_ids = localStorage.getItem("id-cards");
+                            if (!archived_ids) {
+                                archived_ids = [];
+                            } else {
+                                archived_ids = JSON.parse(archived_ids);
+                            }
+                            var brain = JSON.parse(sessionStorage.getItem("brain"));
+                            for (let keyword in brain) {
+                                brain[keyword] = brain[keyword].particles
+                            }
 
-                    let id_is_duplicate = false;
-                    for (let id of archived_ids) {
-                        if (id.image == url) {
-                            id_is_duplicate = true;
-                            break;
-                        }
-                    }
-                    if (!id_is_duplicate) {
-                        archived_ids.push({
-                            image: url,
-                            name: name,
-                            brain: brain
-                        });
-                        localStorage.setItem("id-cards", JSON.stringify(archived_ids));
-                    }
+                            let id_is_duplicate = false;
+                            for (let id of archived_ids) {
+                                if (id.image == url) {
+                                    id_is_duplicate = true;
+                                    break;
+                                }
+                            }
+                            if (!id_is_duplicate) {
+                                archived_ids.push({
+                                    image: url,
+                                    name: name,
+                                    brain: brain
+                                });
+                                localStorage.setItem("id-cards", JSON.stringify(archived_ids));
+                            }
 
-                    init_archive();
-                })
-            })
-        } else {
-            setTimeout(() => {
-                document.body.classList.add("center-card"); 
-            }, 1000);
-            FILE_TO_SHARE = new File([blob], name + " - (주) 첨단 메모리 시스템.jpg", { type: "image/jpeg" });
-        }
+                            init_archive();
+                        })
+                    })
+                } else {
+                    setTimeout(() => {
+                        document.body.classList.add("center-card"); 
+                    }, 1000);
+                    FILE_TO_SHARE = new File([blob], name + " - (주) 첨단 메모리 시스템.jpg", { type: "image/jpeg" });
+                }
+            },
+            "image/jpeg",
+            0.95
+        )
     }
 
     function draw_id_to_canvas() {
