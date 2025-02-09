@@ -543,10 +543,11 @@
     function on_image_load() {
         var brain_canvas = document.querySelector(".brain");
         var brain = JSON.parse(sessionStorage.getItem("brain"));
-        brain_canvas.width = brain_canvas.clientWidth * window.devicePixelRatio;
-        brain_canvas.height = brain_canvas.clientHeight * window.devicePixelRatio;
+        var aspect = brain_canvas.clientWidth / brain_canvas.clientHeight;
+        brain_canvas.width = 500 * aspect;
+        brain_canvas.height = 500;
         var context = brain_canvas.getContext("2d");
-        context.font = "15px 'Helvetica'";
+        context.font = "100px 'Helvetica'";
         
         var total_particles = 0;
         for (let word in brain) {
