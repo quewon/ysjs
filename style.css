@@ -17,12 +17,12 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
 }
 
 .container {
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -205,7 +205,7 @@ header .logomin {
 
 .page {
     position: relative;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
     /* scroll-snap-align: start; */
 }
