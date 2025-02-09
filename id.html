@@ -446,10 +446,10 @@
 
             .preview-canvas {
                 position: absolute;
-                top: 50% !important;
-                left: 50% !important;
-                width: 50vw !important;
-                height: 50vw !important;
+                top: 50%;
+                left: 50%;
+                width: 50vw;
+                height: 50vw;
                 border: 1px solid red;
                 transform: translate(-50%, -50%);
             }
@@ -737,20 +737,17 @@
     }
 
     function draw_id_to_canvas() {
-        const padding = id_image.naturalWidth/2;
+        // image width and height
+        const width = 300;
+        const height = width * (id_image.naturalHeight / id_image.naturalWidth);
+        const padding = width/2;
 
         var canvas = document.createElement("canvas");
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.width = id_image.width + "px";
-        canvas.style.height = id_image.height + "px";
-
         var context = canvas.getContext("2d");
-        canvas.width = canvas.height = id_image.naturalWidth + padding;
+        canvas.width = canvas.height = width + padding;
 
         var offset_x = padding/2;
-        var offset_y = (canvas.height - id_image.naturalHeight) / 2;
+        var offset_y = (canvas.height - height) / 2;
 
         context.translate(offset_x, offset_y);
 
@@ -766,26 +763,32 @@
         );
         bg_offset.x = (bg_bounds.width - (bg.naturalWidth * bg_scale)) / 2;
         bg_offset.y = (bg_bounds.height - (bg.naturalHeight * bg_scale)) / 2;
-        // context.drawImage(
-        //     bg,
-        //     -bg_offset.x/2, -bg_offset.y/2,
-        //     bg.naturalWidth + bg_offset.x,
-        //     bg.naturalHeight + bg_offset.y,
-        //     bg_bounds.x,
-        //     bg_bounds.y,
-        //     bg_bounds.width,
-        //     bg_bounds.height
-        // );
+        context.drawImage(
+            bg,
+            -bg_offset.x/2, -bg_offset.y/2,
+            bg.naturalWidth + bg_offset.x,
+            bg.naturalHeight + bg_offset.y,
+            bg_bounds.x,
+            bg_bounds.y,
+            bg_bounds.width,
+            bg_bounds.height
+        );
 
         context.shadowColor = "rgba(0, 0, 0, .25)";
         context.shadowBlur = 60;
         context.shadowOffsetX = 10;
         context.shadowOffsetY = 20;
-        context.drawImage(id_image, 0, 0);
+        context.drawImage(
+            id_image, 
+            0, 0, 
+            id_image.naturalWidth, id_image.naturalHeight, 
+            0, 0, 
+            width, height
+        );
         context.shadowColor = "transparent";
 
         var picture = document.querySelector(".picture");
-        var picture_bounds = { x: 172, y: 340, width: 1123, height: 1062 };
+        var picture_bounds = { x: 5.9/100 * width, y: 19.4/100 * height, width: 38.1/100 * width, height: 60.2/100 * height };
         var picture_scale = 1;
         var picture_offset = { x:0, y:0 };
         picture_scale = Math.max(
@@ -805,15 +808,15 @@
             picture_bounds.height
         );
 
-        context.font = "80px 'Helvetica'";
+        context.font = (width/30)+"px 'Helvetica'";
         context.fillStyle = "rgb(110, 110, 110)";
         context.textAlign = "right";
         context.textBaseline = "middle";
-        context.fillText(sessionStorage.getItem("name"), 2845, 416);
-        context.fillText(get_date(), 2845, 596);
+        context.fillText(sessionStorage.getItem("name"), 96.4/100 * width, 23.24/100 * height);
+        context.fillText(get_date(), 96.4/100 * width, 33.6/100 * height);
 
         var brain_canvas = document.querySelector(".brain");
-        var brain_bounds = { x: 1450, y: 877, width: 1361, height: 453 };
+        var brain_bounds = { x: 49.2/100 * width, y: 49.33/100 * height, width: 47.4/100 * width, height: 27.76/100 * height };
         var brain_scale = 1;
         var brain_offset = { x:0, y:0 };
         brain_scale = Math.min(
@@ -834,7 +837,7 @@
         );
 
         var sign = document.querySelector(".signature");
-        var sign_bounds = { x: 2430, y: 1369, width: 442, height: 160 };
+        var sign_bounds = { x: 83.1/100 * width, y: 78/100 * height, width: 15/100 * width, height: 9.36/100 * height };
         var sign_scale = 1;
         var sign_offset = { x:0, y:0 };
         sign_scale = Math.min(
