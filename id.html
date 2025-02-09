@@ -343,7 +343,12 @@
         }
 
         @media screen and (max-width: 500px) {
+            .right-column {
+                width: 100vw;
+                padding: 0;
+            }
             .left-column {
+                --floor: 40dvh;
                 position: absolute;
                 height: 100dvh;
                 border-bottom: 1px solid black;
@@ -387,6 +392,34 @@
             }
             .id-card {
                 top: 2em;
+                opacity: 0;
+                transition: opacity 3s;
+                animation: swing 8s infinite, tilt 5s infinite;
+            }
+            @keyframes swing {
+                0% {
+                    rotate: -5deg;
+                }
+                50% {
+                    rotate: 5deg;
+                }
+                100% {
+                    rotate: -5deg;
+                }
+            }
+            @keyframes tilt {
+                0% {
+                    scale: 0.95 1;
+                }
+                50% {
+                    scale: 1 0.95;
+                }
+                100% {
+                    scale: 0.95 1;
+                }
+            }
+            .center-card .id-card {
+                opacity: 1;
             }
             .card-info {
                 font-size: 2vw;
@@ -692,7 +725,9 @@
                 })
             })
         } else {
-            document.body.classList.add("center-card");
+            setTimeout(() => {
+                document.body.classList.add("center-card"); 
+            }, 200);
             FILE_TO_SHARE = new File([blob], name + " - (주) 첨단 메모리 시스템.jpg", { type: "image/jpeg" });;
         }
     }
