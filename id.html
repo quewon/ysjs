@@ -443,16 +443,6 @@
                 opacity: 1;
                 pointer-events: all;
             }
-
-            .preview-canvas {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 50vw;
-                height: 50vw;
-                border: 1px solid red;
-                transform: translate(-50%, -50%);
-            }
         }
     </style>
 </head>
@@ -667,9 +657,6 @@
         var filename = name + " " + get_time() + ".jpg";
         var canvas = draw_id_to_canvas();
 
-        document.body.appendChild(canvas);
-        canvas.classList.add("preview-canvas");
-
         var blob = canvas.toBlob(
             blob => {
                 if (window.innerWidth > 500) {
@@ -738,7 +725,7 @@
 
     function draw_id_to_canvas() {
         // image width and height
-        const width = 700;
+        const width = 800;
         const height = width * (id_image.naturalHeight / id_image.naturalWidth);
         const padding = width/4;
 
