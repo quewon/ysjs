@@ -337,6 +337,10 @@
             width: fit-content;
             padding: .5rem;
         }
+        
+        .share-button {
+            display: none;
+        }
 
         @media screen and (max-width: 500px) {
             .left-column {
@@ -372,20 +376,11 @@
                 white-space: wrap;
                 margin-top: 2em;
             }
-            .archive-label {
-                margin-top: 2.5em;
-            }
-            .archive-label br {
-                display: none;
-            }
-            .archive-buttons {
-                top: 15rem;
-            }
             .boxes {
                 transform: translate(-50%, 14%) scale(0.7);
             }
             .outro > img {
-                top: 26rem;
+                display: none;
             }
             .return-button {
                 top: 2rem;
@@ -395,6 +390,25 @@
             }
             .card-info {
                 font-size: 2vw;
+            }
+            .archive-page {
+                display: none;
+            }
+
+            .share-button {
+                display: block;
+                opacity: 0;
+                pointer-events: none;
+                position: absolute;
+                bottom: 6rem;
+                left: 50%;
+                transform: translate(-50%, 0);
+                transition: opacity 5s;
+                font-size: inherit;
+            }
+            .center-card .share-button {
+                opacity: 1;
+                pointer-events: all;
             }
         }
     </style>
@@ -432,10 +446,11 @@
                 <a class="logo" href="index"><img src="res/logo.svg"></a>
                 <div class="qr-code"></div>
                 <img src="res/scroll_prompt.svg">
+                <button class="share-button" onclick="share_file()">공유하기</button>
             </div>
         </div>
 
-        <div class="page">
+        <div class="page archive-page">
             <p class="archive-label">
                 <u class="name">관람자</u>님의 디지털영생 ID 카드가 <br>
                 아카이빙 페이지가 추가 되었습니다.
@@ -472,6 +487,19 @@
 
 <script src="js/qrcode.min.js"></script>
 <script>
+    var FILE_TO_SHARE;
+
+    async function share_file() {
+        
+        const data = {
+            title: "내 아이디 카드 - (주) 첨단 메모리 시스템",
+            files: [FILE_TO_SHARE]
+        };
+        if (navigator.canShare && navigator.canShare(data)) {
+            await navigator.share(data);
+        }
+    }
+
     window.devicePixelRatio = 2;
 
     const archive_buttons = document.querySelector(".archive-buttons");
@@ -664,35 +692,7 @@
             })
         } else {
             document.body.classList.add("center-card");
-
-            archived_ids = localStorage.getItem("id-cards");
-            if (!archived_ids) {
-                archived_ids = [];
-            } else {
-                archived_ids = JSON.parse(archived_ids);
-            }
-            var brain = JSON.parse(sessionStorage.getItem("brain"));
-            for (let keyword in brain) {
-                brain[keyword] = brain[keyword].particles
-            }
-
-            let id_is_duplicate = false;
-            for (let id of archived_ids) {
-                if (id.image == url) {
-                    id_is_duplicate = true;
-                    break;
-                }
-            }
-            if (!id_is_duplicate) {
-                archived_ids.push({
-                    image: url,
-                    name: name,
-                    brain: brain
-                });
-                localStorage.setItem("id-cards", JSON.stringify(archived_ids));
-            }
-
-            init_archive();
+            FILE_TO_SHARE = new File([blob], name + " - (주) 첨단 메모리 시스템.jpg", { type: "image/jpeg" });;
         }
     }
 
