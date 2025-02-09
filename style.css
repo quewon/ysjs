@@ -54,11 +54,16 @@ footer {
     footer {
         word-break: keep-all;
         display: block;
+        text-align: center;
     }
     footer span:first-child,
     footer span:nth-last-child(3),
     footer span:nth-last-child(2) {
         display: none;
+    }
+
+    button {
+        color: inherit;
     }
 }
 

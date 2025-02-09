@@ -175,7 +175,7 @@
         </footer>
 
         <header>
-            <a href="index.html"><img class="logomin" src="res/logomin.svg"></a>
+            <a href="/"><img class="logomin" src="res/logomin.svg"></a>
         </header>
     </div>
     
@@ -189,7 +189,7 @@
         var button = document.querySelector(".contract-button");
         if (document.querySelectorAll("a.selected").length == 3) {
             button.onclick = null;
-            button.parentElement.href = "signature.html";
+            button.parentElement.href = "signature";
             button.classList.add("changed");
         } else {
             button.classList.remove("changed");
